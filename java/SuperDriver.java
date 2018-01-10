@@ -11,17 +11,18 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.paulhammant.ngwebdriver.ByAngular;
+
 public class SuperDriver {
 
-	// Clase Superdriver que aumenta las funcionalidades del driver de Selenium
+	// Superdriver class that enhances the functionality of the Selenium driver
 	private RemoteWebDriver _driver;
 	private static final int WAIT_TIMEOUT = 10;
 
 	public SuperDriver(RemoteWebDriver driver) {
 
 		_driver = driver;
-		// Constructor que recibe como argumento el driver y crea un objeto de tipo
-		// SuperDriver
+		//Builder that receives the driver as an argument and creates a SuperDriver type object.
 	}
 	
 	///
@@ -39,39 +40,33 @@ public class SuperDriver {
 			// seconds
 			return _driver.findElement(how);
 		} catch (Exception e) {
-
 			return null;
-
 		}
 	}
-	// Usando los metodos del driver, busca un elemento (key) mediante un patron (how)
-	// Todos los metodos devuelven un objeto de tipo WebElement
-
+	
+	// Using the driver methods, searches for an element (key) using a pattern 
+	// (how) All methods return a WebElement type object.
 	public WebElement waitAndGetByXpath(String key) {
 
 		ByXPath objetoBusqueda = new ByXPath(key);
 		return waitAndGet(objetoBusqueda);
 
-		// Usando los metodos del driver, busca un elemento por XPATH (key) y lo
-		// devuelve.
-
+		//  Using the driver methods, searches for an 
+		// element by XPATH (key) and returns it.
 	}
 
 	public WebElement waitAndGetById(String key) {
 		ById objetoBusqueda = new ById(key);
 		return waitAndGet(objetoBusqueda);
 
-		// Usando los metodos del driver, busca un elemento por ID (key) y lo devuelve.
-
+		// Using the driver methods, searches for an element by ID (key) and returns it.
 	}
 
 	public WebElement waitAndGetByTagName(String key) {
-
 		ByTagName objetoBusqueda = new ByTagName(key);
 		return waitAndGet(objetoBusqueda);
-		// Usando los metodos del driver, busca un elemento por XPATH (key) y lo
-		// devuelve.
-
+		// Using the driver methods, searches for an element by ID 
+		// (key) and returns it.
 	}
 
 	///
@@ -158,6 +153,46 @@ public class SuperDriver {
 
 	public void waitAndSendKeysByID(String key, String sendKey) {
 		waitAndSendKeys(How.ID, key, sendKey);
+	}
+
+	///
+	/// Special implementaion for By.Angular
+	///
+
+	//It is necessary to have a file allowing the use of protractor in the Angular part.
+	
+	public enum ByAngularMode {
+		model, binding
+	}
+
+	public WebElement waitAndGetAngular(String key) {
+		try {
+			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(ByAngular.model(key)));
+			// throws a timeout exception if element not present after waiting
+			// <timeoutInSeconds> seconds
+			return _driver.findElement(ByAngular.model(key));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public WebElement waitAndGetByAngularModel(String key) {
+		return waitAndGetAngular(key);
+	}
+
+	// function for wait and sendkey
+	public void waitAndSendKeysAngularModel(String key, String sendKey) {
+		waitAndSendKeysAngular(ByAngularMode.model, key, sendKey);
+	}
+
+	private void waitAndSendKeysAngular(ByAngularMode mode, String key, String sendKey) {
+		WebElement element;
+		if (mode == ByAngularMode.model) {
+			element = waitAndGetByAngularModel(key);
+			
+			element.sendKeys(sendKey);
+		}
 	}
 
 }
