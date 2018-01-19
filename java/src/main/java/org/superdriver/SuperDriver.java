@@ -26,11 +26,19 @@ public class SuperDriver {
 	public SuperDriver(RemoteWebDriver driver) {
 		_driver = driver;
 	}
-	
+
 	public RemoteWebDriver getDriver() {
 		return _driver;
 	}
-	
+
+	///
+	/// URL methods
+	///
+
+	public void loadURL(String url) {
+		_driver.get(url);	
+	}
+
 	///
 	/// Wait and get
 	///
@@ -49,7 +57,7 @@ public class SuperDriver {
 			return null;
 		}
 	}
-	
+
 	// Using the driver methods, searches for an element (key) using a pattern 
 	// (how) All methods return a WebElement type object.
 	public WebElement waitAndGetByXpath(String key) {
@@ -108,6 +116,7 @@ public class SuperDriver {
 		waitAndClick(How.TAG_NAME, key);
 	}
 
+
 	///
 	/// Wait and Select option
 	///
@@ -133,12 +142,20 @@ public class SuperDriver {
 		}
 	}
 
+	public void selectOptionByXpath(String key, int option) {
+		waitAndSelectOption(How.XPATH, key, option);
+	}
+
 	public void selectOptionByID(String key, int option) {
 		waitAndSelectOption(How.ID, key, option);
 	}
 
+	public void selectOptionByTagName(String key, int option) {
+		waitAndSelectOption(How.TAG_NAME, key, option);
+	}
+
 	///
-	/// wait and sendkey
+	/// wait and sendkeys
 	///
 
 	private void waitAndSendKeys(How mode, String key, String sendKey) {
@@ -167,7 +184,7 @@ public class SuperDriver {
 
 	//It is necessary to have a file allowing the use of protractor in the Angular part.
 
-	
+
 	public enum ByAngularMode {
 		model, binding
 	}
@@ -197,7 +214,7 @@ public class SuperDriver {
 		WebElement element;
 		if (mode == ByAngularMode.model) {
 			element = waitAndGetByAngularModel(key);
-			
+
 			element.sendKeys(sendKey);
 		}
 	}*/

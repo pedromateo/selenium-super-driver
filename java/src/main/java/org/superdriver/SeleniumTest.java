@@ -11,7 +11,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class SeleniumTest {
-	
+
 	//private static InternetExplorerDriver _driver;
 	private static ChromeDriver _driver;
 	private static SuperDriver _sd;
@@ -20,11 +20,11 @@ public class SeleniumTest {
 
 	@BeforeClass
 	public static void openBrowser(){
-		
+
 		//System.setProperty("webdriver.firefox.marionette","C:\\selenium\\drivers\\geckodriver.exe");
 		System.setProperty("webdriver.chrome.driver","C:\\selenium\\drivers\\chromedriver.exe");
 		//System.setProperty("webdriver.ie.driver","C:\\selenium\\drivers\\IEDriverServer.exe");
-		
+
 		//_driver = new InternetExplorerDriver();
 		_driver = new ChromeDriver();
 		_sd = new SuperDriver(_driver);
@@ -34,9 +34,8 @@ public class SeleniumTest {
 
 	@Test
 	public void valid_UserCredential(){
-
 		System.out.println("Starting test " + new Object(){}.getClass().getEnclosingMethod().getName());
-		_driver.get("http://www.store.demoqa.com");	
+		_sd.loadURL("http://www.store.demoqa.com");	
 		_sd.clickByXpath(".//*[@id='account']/a");
 		_sd.sendKeysByID("log", "user");
 		_sd.sendKeysByID("pwd", "pass");
@@ -48,9 +47,8 @@ public class SeleniumTest {
 
 	@Test
 	public void valid_UserCredential_2(){
-
 		System.out.println("Starting test " + new Object(){}.getClass().getEnclosingMethod().getName());
-		_driver.get("http://www.store.demoqa.com");	
+		_sd.loadURL("http://www.store.demoqa.com");	
 		_sd.clickByXpath(".//*[@id='account']/a");
 		_sd.sendKeysByID("log", "testuser_3");
 		_sd.sendKeysByID("pwd", "Test@123");
