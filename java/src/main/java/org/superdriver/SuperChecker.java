@@ -32,6 +32,16 @@ public class SuperChecker {
 			return false;
 		}
 	}
+	public boolean assertTitle(String title)
+	{
+		try {
+			String _title = this._sd.waitAndGetTitle();
+			Assert.assertEquals(title, _title);
+			return true;
+		}catch (Exception e) {
+			return false;
+		}
+	}
 
 
 	//Assert.assertTrue(elemento.isDisplayed());

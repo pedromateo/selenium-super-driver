@@ -21,9 +21,9 @@ public class SeleniumTest {
 	@BeforeClass
 	public static void openBrowser(){
 
-		//System.setProperty("webdriver.firefox.marionette","C:\\selenium\\drivers\\geckodriver.exe");
-		System.setProperty("webdriver.chrome.driver","C:\\selenium\\drivers\\chromedriver.exe");
-		//System.setProperty("webdriver.ie.driver","C:\\selenium\\drivers\\IEDriverServer.exe");
+		//System.setProperty("webdriver.firefox.marionette","/home/carm/selenium/drivers/geckodriver.exe");
+		System.setProperty("webdriver.chrome.driver","/home/carm/selenium/drivers/chromedriver");
+		//System.setProperty("webdriver.ie.driver","/home/carm/selenium/drivers/IEDriverServer.exe");
 
 		//_driver = new InternetExplorerDriver();
 		_driver = new ChromeDriver();
@@ -55,6 +55,14 @@ public class SeleniumTest {
 		_sd.clickByID("login");
 		//try{
 		_sc.assertElementPresent(".//*[@id='account_logout']/a");
+	}
+	
+	@Test
+	public void assert_Title() {
+		System.out.println("Starting test "+ new Object() {}.getClass().getEnclosingMethod().getName());
+		_sd.loadURL("http://www.store.demoqa.com");
+		_sc.assertTitle("ONLINE STORE | Toolsqa Dummy Test site");
+		
 	}
 
 

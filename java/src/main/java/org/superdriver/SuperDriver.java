@@ -1,7 +1,11 @@
 package org.superdriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.By.ByCssSelector;
 import org.openqa.selenium.By.ById;
+import org.openqa.selenium.By.ByLinkText;
+import org.openqa.selenium.By.ByName;
+import org.openqa.selenium.By.ByPartialLinkText;
 import org.openqa.selenium.By.ByTagName;
 import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.WebElement;
@@ -42,7 +46,13 @@ public class SuperDriver {
 	///
 	/// Wait and get
 	///
-
+	public String waitAndGetTitle() {
+		String title;
+		WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("title")));
+		title = _driver.getTitle();
+		return title;
+	}
 	public WebElement waitAndGet(By how) {
 		try {
 			// return WebDriverWait(self._driver,
@@ -69,8 +79,36 @@ public class SuperDriver {
 		// element by XPATH (key) and returns it.
 	}
 
-	public WebElement waitAndGetById(String key) {
+	public WebElement waitAndGetByID(String key) {
 		ById objetoBusqueda = new ById(key);
+		return waitAndGet(objetoBusqueda);
+
+		// Using the driver methods, searches for an element by ID (key) and returns it.
+	}
+	
+	public WebElement waitAndGetByName(String key) {
+		ByName objetoBusqueda = new ByName(key);
+		return waitAndGet(objetoBusqueda);
+		
+		// Using the driver methods, searches for an element by ID (key) and returns it.
+	}
+	
+	public WebElement waitAndGetByCssSelector(String key) {
+		ByCssSelector objetoBusqueda = new ByCssSelector(key);
+		return waitAndGet(objetoBusqueda);
+
+		// Using the driver methods, searches for an element by ID (key) and returns it.
+	}
+	
+	public WebElement waitAndGetByLinkText(String key) {
+		ByLinkText objetoBusqueda = new ByLinkText(key);
+		return waitAndGet(objetoBusqueda);
+
+		// Using the driver methods, searches for an element by ID (key) and returns it.
+	}
+	
+	public WebElement waitAndGetByPartialLinkText(String key) {
+		ByPartialLinkText objetoBusqueda = new ByPartialLinkText(key);
 		return waitAndGet(objetoBusqueda);
 
 		// Using the driver methods, searches for an element by ID (key) and returns it.
@@ -90,17 +128,35 @@ public class SuperDriver {
 	public void waitAndClick(How mode, String key) {
 
 		WebElement elemento;
-		if (mode == How.XPATH) {
-			elemento = waitAndGetByXpath(key);
-			elemento.click();
-		}
-		if (mode == How.ID) {
-			elemento = waitAndGetById(key);
-			elemento.click();
-		}
-		if (mode == How.TAG_NAME) {
-			elemento = waitAndGetByTagName(key);
-			elemento.click();
+		switch(mode) {
+			case XPATH:
+				elemento = waitAndGetByXpath(key);
+				elemento.click();
+				break;
+			case ID:
+				elemento = waitAndGetByXpath(key);
+				elemento.click();
+				break;
+			case TAG_NAME:
+				elemento = waitAndGetByXpath(key);
+				elemento.click();
+				break;
+			case NAME:
+				elemento = waitAndGetByXpath(key);
+				elemento.click();
+				break;
+			case CSS:
+				elemento = waitAndGetByXpath(key);
+				elemento.click();
+				break;
+			case LINK_TEXT:
+				elemento = waitAndGetByXpath(key);
+				elemento.click();
+				break;
+			case PARTIAL_LINK_TEXT:
+				elemento = waitAndGetByXpath(key);
+				elemento.click();
+				break;
 		}
 	}
 
@@ -115,7 +171,22 @@ public class SuperDriver {
 	public void clickByTagName(String key) {
 		waitAndClick(How.TAG_NAME, key);
 	}
-
+	
+	public void clickByName(String key) {
+		waitAndClick(How.NAME, key);
+	}
+	
+	public void clickByCssSelector(String key) {
+		waitAndClick(How.CSS, key);
+	}
+	
+	public void clickByLinkText(String key) {
+		waitAndClick(How.LINK_TEXT, key);
+	}
+	
+	public void clickByPartialLinkText(String key) {
+		waitAndClick(How.PARTIAL_LINK_TEXT, key);
+	}
 
 	///
 	/// Wait and Select option
@@ -124,21 +195,43 @@ public class SuperDriver {
 	public void waitAndSelectOption(How mode, String key, int option) {
 
 		WebElement elemento;
-
-		if (mode == How.XPATH) {
-			elemento = waitAndGetByXpath(key);
-			Select sel = new Select(elemento);
-			sel.selectByIndex(option);
-		}
-		if (mode == How.ID) {
-			elemento = waitAndGetById(key);
-			Select sel = new Select(elemento);
-			sel.selectByIndex(option);
-		}
-		if (mode == How.TAG_NAME) {
-			elemento = waitAndGetByTagName(key);
-			Select sel = new Select(elemento);
-			sel.selectByIndex(option);
+		Select sel;
+		switch(mode) {
+			case XPATH:
+				elemento = waitAndGetByXpath(key);
+				sel = new Select(elemento);
+				sel.selectByIndex(option);
+				break;
+			case ID:
+				elemento = waitAndGetByID(key);
+				sel = new Select(elemento);
+				sel.selectByIndex(option);
+				break;
+			case TAG_NAME:
+				elemento = waitAndGetByTagName(key);
+				sel = new Select(elemento);
+				sel.selectByIndex(option);
+				break;
+			case NAME:
+				elemento = waitAndGetByName(key);
+				sel = new Select(elemento);
+				sel.selectByIndex(option);
+				break;
+			case CSS:
+				elemento = waitAndGetByCssSelector(key);
+				sel = new Select(elemento);
+				sel.selectByIndex(option);
+				break;
+			case LINK_TEXT:
+				elemento = waitAndGetByLinkText(key);
+				sel = new Select(elemento);
+				sel.selectByIndex(option);
+				break;
+			case PARTIAL_LINK_TEXT:
+				elemento = waitAndGetByPartialLinkText(key);
+				sel = new Select(elemento);
+				sel.selectByIndex(option);
+				break;
 		}
 	}
 
@@ -153,6 +246,23 @@ public class SuperDriver {
 	public void selectOptionByTagName(String key, int option) {
 		waitAndSelectOption(How.TAG_NAME, key, option);
 	}
+	
+	public void selectOptionByName(String key, int option) {
+		waitAndSelectOption(How.NAME, key, option);
+	}
+	
+	public void selectOptionCssSelector(String key, int option) {
+		waitAndSelectOption(How.CSS, key, option);
+	}
+	
+	public void selectOptionLinkText(String key, int option) {
+		waitAndSelectOption(How.LINK_TEXT, key, option);
+	}
+	
+	public void selectOptionPartialLinkText(String key, int option) {
+		waitAndSelectOption(How.PARTIAL_LINK_TEXT, key, option);
+	}
+	
 
 	///
 	/// wait and sendkeys
@@ -160,26 +270,70 @@ public class SuperDriver {
 
 	private void waitAndSendKeys(How mode, String key, String sendKey) {
 		WebElement elemento;
-		if (mode == How.XPATH) {
-			elemento = waitAndGetByXpath(key);
-			elemento.sendKeys(sendKey);
-		}
-		if (mode == How.ID) {
-			elemento = waitAndGetById(key);
-			elemento.sendKeys(sendKey);
-		}
-		if (mode == How.TAG_NAME) {
-			elemento = waitAndGetByTagName(key);
-			elemento.sendKeys(sendKey);
+		switch(mode)
+		{
+			case XPATH:
+				elemento = waitAndGetByXpath(key);
+				elemento.sendKeys(sendKey);
+				break;
+			case ID:
+				elemento = waitAndGetByID(key);
+				elemento.sendKeys(sendKey);
+				break;
+			case TAG_NAME:
+				elemento = waitAndGetByTagName(key);
+				elemento.sendKeys(sendKey);
+				break;
+			case NAME:
+				elemento = waitAndGetByName(key);
+				elemento.sendKeys(sendKey);
+				break;
+			case CSS:
+				elemento = waitAndGetByCssSelector(key);
+				elemento.sendKeys(sendKey);
+				break;
+			case LINK_TEXT:
+				elemento = waitAndGetByLinkText(key);
+				elemento.sendKeys(sendKey);
+				break;
+			case PARTIAL_LINK_TEXT:
+				elemento = waitAndGetByPartialLinkText(key);
+				elemento.sendKeys(sendKey);
+				break;
 		}
 	}
 
 	public void sendKeysByID(String elem, String sendKey) {
 		waitAndSendKeys(How.ID, elem, sendKey);
 	}
+	
+	public void sendKeysByXpath(String elem, String sendKey) {
+		waitAndSendKeys(How.XPATH, elem, sendKey);
+	}
+	
+	public void sendKeysByTagName(String elem, String sendKey) {
+		waitAndSendKeys(How.TAG_NAME, elem, sendKey);
+	}
+
+	public void sendKeysByName(String elem, String sendKey) {
+		waitAndSendKeys(How.NAME, elem, sendKey);
+	}
+	
+	public void sendKeysByCssSelector(String elem, String sendKey) {
+		waitAndSendKeys(How.CSS, elem, sendKey);
+	}
+	
+	public void sendKeysByLinkText(String elem, String sendKey) {
+		waitAndSendKeys(How.LINK_TEXT, elem, sendKey);
+	}
+	
+	public void sendKeysByPartialLinkText(String elem, String sendKey) {
+		waitAndSendKeys(How.PARTIAL_LINK_TEXT, elem, sendKey);
+	}
+	
 
 	///
-	/// Special implementaion for By.Angular
+	/// Special implementation for By.Angular
 	///
 
 	//It is necessary to have a file allowing the use of protractor in the Angular part.
