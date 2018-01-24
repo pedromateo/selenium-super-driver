@@ -8,7 +8,9 @@ import org.openqa.selenium.By.ByName;
 import org.openqa.selenium.By.ByPartialLinkText;
 import org.openqa.selenium.By.ByTagName;
 import org.openqa.selenium.By.ByXPath;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -331,11 +333,75 @@ public class SuperDriver {
 		waitAndSendKeys(How.PARTIAL_LINK_TEXT, elem, sendKey);
 	}
 	
-
+	///
+	/// Browser and Window Methods
+	///
+	
+	public void switchTab() {
+		Actions act = new Actions(_driver);
+		act.keyDown(Keys.CONTROL).sendKeys(Keys.TAB).build().perform();
+	}
+	
+	public void newTab() {
+		Actions act = new Actions(_driver);
+		act.keyDown(Keys.CONTROL).sendKeys("t").build().perform();
+	}
+	
+	public void maximize() {
+		_driver.manage().window().maximize();
+	}
+	
+	///
+	/// Mouse Movement Methods
+	///
+	
+	public void dragAndDrop(How mode, String source, String target) {
+		WebElement _source;
+		WebElement _target;
+		Actions builder = new Actions(_driver);
+		switch(mode)
+		{
+		case XPATH:
+			_source = waitAndGetByXpath(source);
+			_target = waitAndGetByXpath(target);
+			builder.dragAndDrop(_source, _target);
+			break;
+		case ID:
+			_source = waitAndGetByID(source);
+			_target = waitAndGetByID(target);
+			builder.dragAndDrop(_source, _target);
+			break;
+		case TAG_NAME:
+			_source = waitAndGetByTagName(source);
+			_target = waitAndGetByTagName(target);
+			builder.dragAndDrop(_source, _target);
+			break;
+		case NAME:
+			_source = waitAndGetByName(source);
+			_target = waitAndGetByName(target);
+			builder.dragAndDrop(_source, _target);
+			break;
+		case CSS:
+			_source = waitAndGetByCssSelector(source);
+			_target = waitAndGetByCssSelector(target);
+			builder.dragAndDrop(_source, _target);
+			break;
+		case LINK_TEXT:
+			_source = waitAndGetByLinkText(source);
+			_target = waitAndGetByLinkText(target);
+			builder.dragAndDrop(_source, _target);
+			break;
+		case PARTIAL_LINK_TEXT:
+			_source = waitAndGetByPartialLinkText(source);
+			_target = waitAndGetByPartialLinkText(target);
+			builder.dragAndDrop(_source, _target);
+			break;
+		}
+	}
+	
 	///
 	/// Special implementation for By.Angular
 	///
-
 	//It is necessary to have a file allowing the use of protractor in the Angular part.
 
 
