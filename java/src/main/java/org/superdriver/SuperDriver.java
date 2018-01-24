@@ -1,5 +1,7 @@
 package org.superdriver;
 
+import java.sql.Driver;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByCssSelector;
 import org.openqa.selenium.By.ById;
@@ -78,7 +80,7 @@ public class SuperDriver {
 		return waitAndGet(objetoBusqueda);
 
 		//  Using the driver methods, searches for an 
-		// element by XPATH (key) and returns it.
+// element by XPATH (key) and returns it.
 	}
 
 	public WebElement waitAndGetByID(String key) {
@@ -267,7 +269,7 @@ public class SuperDriver {
 	
 
 	///
-	/// wait and sendkeys
+	/// wait and send keys
 	///
 
 	private void waitAndSendKeys(How mode, String key, String sendKey) {
@@ -337,18 +339,41 @@ public class SuperDriver {
 	/// Browser and Window Methods
 	///
 	
+	// Change between tabs
 	public void switchTab() {
 		Actions act = new Actions(_driver);
 		act.keyDown(Keys.CONTROL).sendKeys(Keys.TAB).build().perform();
 	}
 	
+	// Create a new empty tab
 	public void newTab() {
 		Actions act = new Actions(_driver);
 		act.keyDown(Keys.CONTROL).sendKeys("t").build().perform();
 	}
 	
+	// Maximize window
 	public void maximize() {
 		_driver.manage().window().maximize();
+	}
+	
+	// Switch to last window and maximize it
+	
+	public void switchToNewWindow() throws InterruptedException {
+		WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+		wait.wait(WAIT_TIMEOUT);
+		// _driver.close(); uncomment if you need to close last window
+		for(String window : _driver.getWindowHandles()) {
+			_driver.switchTo().window(window);
+		}
+		this.maximize();
+	}
+	
+	// Switch to main window and maximize it
+	
+	public void switchToMainWindow() throws InterruptedException {
+		WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+		wait.wait(WAIT_TIMEOUT);
+		_driver.switchTo().window(_driver.getWindowHandles().iterator().next());
 	}
 	
 	///
@@ -356,8 +381,7 @@ public class SuperDriver {
 	///
 	
 	public void dragAndDrop(How mode, String source, String target) {
-		WebElement _source;
-		WebElement _target;
+		WebElement _source, _target;
 		Actions builder = new Actions(_driver);
 		switch(mode)
 		{
@@ -396,6 +420,141 @@ public class SuperDriver {
 			_target = waitAndGetByPartialLinkText(target);
 			builder.dragAndDrop(_source, _target);
 			break;
+		}
+	}
+	
+	public void waitAndMoveTo(How mode, String where) {
+		WebElement _where;
+		Actions builder = new Actions(_driver);
+		switch(mode) {
+			case XPATH:
+				_where = waitAndGetByXpath(where);
+				builder.moveToElement(_where);
+				break;
+			case ID:
+				_where = waitAndGetByID(where);
+				builder.moveToElement(_where);
+				break;
+			case TAG_NAME:
+				_where = waitAndGetByTagName(where);
+				builder.moveToElement(_where);
+				break;
+			case NAME:
+				_where = waitAndGetByName(where);
+				builder.moveToElement(_where);
+				break;
+			case CSS:
+				_where = waitAndGetByCssSelector(where);
+				builder.moveToElement(_where);
+				break;
+			case LINK_TEXT:
+				_where = waitAndGetByLinkText(where);
+				builder.moveToElement(_where);
+				break;
+			case PARTIAL_LINK_TEXT:
+				_where = waitAndGetByPartialLinkText(where);
+				builder.moveToElement(_where);
+				break;
+		}
+	}
+	
+	public void moveBetweenXAxis(How mode, WebElement from, WebElement where) {
+		int x,y;
+		Actions builder = new Actions(_driver);
+		x = from.getLocation().getX();
+		y = where.getLocation().getY();
+		builder.moveByOffset(x,y).moveToElement(where);
+	}
+	
+	public void moveBetweenYAxis(How mode, WebElement from, WebElement where) {
+		int x,y;
+		Actions builder = new Actions(_driver);
+		x = from.getLocation().getY();
+		y = where.getLocation().getX();
+		builder.moveByOffset(x,y).moveToElement(where);
+	}
+	
+	public void waitAndMoveBetweenXAxis(How mode, String from, String where) {
+		WebElement _from, _where;
+		
+		switch(mode){
+			case XPATH:
+				_where = waitAndGetByXpath(where);
+				_from = waitAndGetByXpath(from);
+				this.moveBetweenXAxis(mode, _from, _where);
+				break;
+			case ID:
+				_where = waitAndGetByID(where);
+				_from = waitAndGetByID(from);
+				this.moveBetweenXAxis(mode, _from, _where);
+				break;
+			case TAG_NAME:
+				_where = waitAndGetByTagName(where);
+				_from = waitAndGetByTagName(from);
+				this.moveBetweenXAxis(mode, _from, _where);
+				break;
+			case NAME:
+				_where = waitAndGetByName(where);
+				_from = waitAndGetByName(from);
+				this.moveBetweenXAxis(mode, _from, _where);
+				break;
+			case CSS:
+				_where = waitAndGetByCssSelector(where);
+				_from = waitAndGetByCssSelector(from);
+				this.moveBetweenXAxis(mode, _from, _where);
+				break;
+			case LINK_TEXT:
+				_where = waitAndGetByLinkText(where);
+				_from = waitAndGetByLinkText(from);
+				this.moveBetweenXAxis(mode, _from, _where);
+				break;
+			case PARTIAL_LINK_TEXT:
+				_where = waitAndGetByPartialLinkText(where);
+				_from = waitAndGetByPartialLinkText(from);
+				this.moveBetweenXAxis(mode, _from, _where);
+				break;
+		}
+	}
+	
+	public void waitAndMoveBetweenYAxis(How mode, String from, String where) {
+		WebElement _from, _where;
+		
+		switch(mode){
+			case XPATH:
+				_where = waitAndGetByXpath(where);
+				_from = waitAndGetByXpath(from);
+				this.moveBetweenYAxis(mode, _from, _where);
+				break;
+			case ID:
+				_where = waitAndGetByID(where);
+				_from = waitAndGetByID(from);
+				this.moveBetweenYAxis(mode, _from, _where);
+				break;
+			case TAG_NAME:
+				_where = waitAndGetByTagName(where);
+				_from = waitAndGetByTagName(from);
+				this.moveBetweenYAxis(mode, _from, _where);
+				break;
+			case NAME:
+				_where = waitAndGetByName(where);
+				_from = waitAndGetByName(from);
+				this.moveBetweenYAxis(mode, _from, _where);
+				break;
+			case CSS:
+				_where = waitAndGetByCssSelector(where);
+				_from = waitAndGetByCssSelector(from);
+				this.moveBetweenYAxis(mode, _from, _where);
+				break;
+			case LINK_TEXT:
+				_where = waitAndGetByLinkText(where);
+				_from = waitAndGetByLinkText(from);
+				this.moveBetweenYAxis(mode, _from, _where);
+				break;
+			case PARTIAL_LINK_TEXT:
+				_where = waitAndGetByPartialLinkText(where);
+				_from = waitAndGetByPartialLinkText(from);
+				this.moveBetweenYAxis(mode, _from, _where);
+				break;
 		}
 	}
 	
