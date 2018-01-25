@@ -1,8 +1,7 @@
 package org.superdriver;
 
-import java.sql.Driver;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.By.ByClassName;
 import org.openqa.selenium.By.ByCssSelector;
 import org.openqa.selenium.By.ById;
 import org.openqa.selenium.By.ByLinkText;
@@ -11,15 +10,15 @@ import org.openqa.selenium.By.ByPartialLinkText;
 import org.openqa.selenium.By.ByTagName;
 import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.paulhammant.ngwebdriver.ByAngular;
 
 public class SuperDriver {
 
@@ -124,13 +123,19 @@ public class SuperDriver {
 		// Using the driver methods, searches for an element by ID 
 		// (key) and returns it.
 	}
+	
+	public WebElement waitAndGetByClass(String key) {
+		ByClassName objetoBusqueda = new ByClassName(key);
+		return waitAndGet(objetoBusqueda);
+		// Using the driver methods, searches for an element by ID 
+		// (key) and returns it.
+	}
 
 	///
 	/// Wait and Click
 	///
 
 	public void waitAndClick(How mode, String key) {
-
 		WebElement elemento;
 		switch(mode) {
 			case XPATH:
@@ -138,29 +143,32 @@ public class SuperDriver {
 				elemento.click();
 				break;
 			case ID:
-				elemento = waitAndGetByXpath(key);
+				elemento = waitAndGetByID(key);
 				elemento.click();
 				break;
 			case TAG_NAME:
-				elemento = waitAndGetByXpath(key);
+				elemento = waitAndGetByTagName(key);
 				elemento.click();
 				break;
 			case NAME:
-				elemento = waitAndGetByXpath(key);
+				elemento = waitAndGetByName(key);
 				elemento.click();
 				break;
 			case CSS:
-				elemento = waitAndGetByXpath(key);
+				elemento = waitAndGetByCssSelector(key);
 				elemento.click();
 				break;
 			case LINK_TEXT:
-				elemento = waitAndGetByXpath(key);
+				elemento = waitAndGetByLinkText(key);
 				elemento.click();
 				break;
 			case PARTIAL_LINK_TEXT:
-				elemento = waitAndGetByXpath(key);
+				elemento = waitAndGetByPartialLinkText(key);
 				elemento.click();
 				break;
+			case CLASS_NAME:
+				elemento = waitAndGetByClass(key);
+				elemento.click();
 		}
 	}
 
@@ -236,6 +244,11 @@ public class SuperDriver {
 				sel = new Select(elemento);
 				sel.selectByIndex(option);
 				break;
+			case CLASS_NAME:
+				elemento = waitAndGetByClass(key);
+				sel = new Select(elemento);
+				sel.selectByIndex(option);
+				break;
 		}
 	}
 
@@ -265,6 +278,10 @@ public class SuperDriver {
 	
 	public void selectOptionPartialLinkText(String key, int option) {
 		waitAndSelectOption(How.PARTIAL_LINK_TEXT, key, option);
+	}
+	
+	public void selectOptionByClass(String key, int option) {
+		waitAndSelectOption(How.CLASS_NAME, key, option);
 	}
 	
 
@@ -304,6 +321,10 @@ public class SuperDriver {
 				elemento = waitAndGetByPartialLinkText(key);
 				elemento.sendKeys(sendKey);
 				break;
+			case CLASS_NAME:
+				elemento = waitAndGetByClass(key);
+				elemento.sendKeys(sendKey);
+				break;
 		}
 	}
 
@@ -335,20 +356,22 @@ public class SuperDriver {
 		waitAndSendKeys(How.PARTIAL_LINK_TEXT, elem, sendKey);
 	}
 	
+	public void sendKeysByClass(String elem, String sendKey) {
+		waitAndSendKeys(How.CLASS_NAME, elem, sendKey);
+	}
+	
 	///
 	/// Browser and Window Methods
 	///
 	
 	// Change between tabs
 	public void switchTab() {
-		Actions act = new Actions(_driver);
-		act.keyDown(Keys.CONTROL).sendKeys(Keys.TAB).build().perform();
+		_driver.findElement(By.cssSelector("body")).sendKeys(Keys.chord(Keys.CONTROL,Keys.TAB));
 	}
 	
 	// Create a new empty tab
 	public void newTab() {
-		Actions act = new Actions(_driver);
-		act.keyDown(Keys.CONTROL).sendKeys("t").build().perform();
+		_driver.findElement(By.cssSelector("body")).sendKeys(Keys.chord(Keys.CONTROL,"t"));
 	}
 	
 	// Maximize window
@@ -381,44 +404,58 @@ public class SuperDriver {
 	///
 	
 	public void dragAndDrop(How mode, String source, String target) {
-		WebElement _source, _target;
+		WebElement _source = null, _target = null;
 		Actions builder = new Actions(_driver);
+		builder.keyDown(Keys.CONTROL)
+			.click(_source)
+			.click(_target)
+			.keyUp(Keys.CONTROL);
+		Action dragAndDrop = builder.build();
+//		org.openqa.selenium.interactions.Action dragAndDrop = builder.clickAndHold(_source)
+//				.moveToElement(_target)
+//				.release(_source)
+//				.build();
 		switch(mode)
 		{
 		case XPATH:
 			_source = waitAndGetByXpath(source);
 			_target = waitAndGetByXpath(target);
-			builder.dragAndDrop(_source, _target);
+			dragAndDrop.perform();
 			break;
 		case ID:
 			_source = waitAndGetByID(source);
 			_target = waitAndGetByID(target);
-			builder.dragAndDrop(_source, _target);
+			dragAndDrop.perform();
 			break;
 		case TAG_NAME:
 			_source = waitAndGetByTagName(source);
 			_target = waitAndGetByTagName(target);
-			builder.dragAndDrop(_source, _target);
+			dragAndDrop.perform();
 			break;
 		case NAME:
 			_source = waitAndGetByName(source);
 			_target = waitAndGetByName(target);
-			builder.dragAndDrop(_source, _target);
+			dragAndDrop.perform();
 			break;
 		case CSS:
 			_source = waitAndGetByCssSelector(source);
 			_target = waitAndGetByCssSelector(target);
-			builder.dragAndDrop(_source, _target);
+			dragAndDrop.perform();
 			break;
 		case LINK_TEXT:
 			_source = waitAndGetByLinkText(source);
 			_target = waitAndGetByLinkText(target);
-			builder.dragAndDrop(_source, _target);
+			dragAndDrop.perform();
 			break;
 		case PARTIAL_LINK_TEXT:
 			_source = waitAndGetByPartialLinkText(source);
 			_target = waitAndGetByPartialLinkText(target);
-			builder.dragAndDrop(_source, _target);
+			dragAndDrop.perform();
+			break;
+		case CLASS_NAME:
+			_source = waitAndGetByClass(source);
+			_target = waitAndGetByClass(target);
+			dragAndDrop.perform();
 			break;
 		}
 	}
@@ -429,49 +466,60 @@ public class SuperDriver {
 		switch(mode) {
 			case XPATH:
 				_where = waitAndGetByXpath(where);
-				builder.moveToElement(_where);
+				builder.moveToElement(_where).perform();
 				break;
 			case ID:
 				_where = waitAndGetByID(where);
-				builder.moveToElement(_where);
+				builder.moveToElement(_where).perform();
 				break;
 			case TAG_NAME:
 				_where = waitAndGetByTagName(where);
-				builder.moveToElement(_where);
+				builder.moveToElement(_where).perform();
 				break;
 			case NAME:
 				_where = waitAndGetByName(where);
-				builder.moveToElement(_where);
+				builder.moveToElement(_where).perform();
 				break;
 			case CSS:
 				_where = waitAndGetByCssSelector(where);
-				builder.moveToElement(_where);
+				builder.moveToElement(_where).perform();
 				break;
 			case LINK_TEXT:
 				_where = waitAndGetByLinkText(where);
-				builder.moveToElement(_where);
+				builder.moveToElement(_where).perform();
 				break;
 			case PARTIAL_LINK_TEXT:
 				_where = waitAndGetByPartialLinkText(where);
-				builder.moveToElement(_where);
+				builder.moveToElement(_where).perform();
+				break;
+			case CLASS_NAME:
+				_where = waitAndGetByClass(where);
+				builder.moveToElement(_where).perform();
 				break;
 		}
 	}
 	
 	public void moveBetweenXAxis(How mode, WebElement from, WebElement where) {
+		Point location;
 		int x,y;
 		Actions builder = new Actions(_driver);
-		x = from.getLocation().getX();
-		y = where.getLocation().getY();
-		builder.moveByOffset(x,y).moveToElement(where);
+		location = where.getLocation();
+		x = location.getX();
+		location = from.getLocation();
+		y = location.getY();
+		
+		builder.moveByOffset(x,y).moveToElement(where).perform();
 	}
 	
 	public void moveBetweenYAxis(How mode, WebElement from, WebElement where) {
+		Point location;
 		int x,y;
 		Actions builder = new Actions(_driver);
-		x = from.getLocation().getY();
-		y = where.getLocation().getX();
-		builder.moveByOffset(x,y).moveToElement(where);
+		location = from.getLocation();
+		x= location.getX();
+		location = where.getLocation();
+		y= location.getY();
+		builder.moveByOffset(x,y).moveToElement(where).perform();
 	}
 	
 	public void waitAndMoveBetweenXAxis(How mode, String from, String where) {
@@ -511,6 +559,11 @@ public class SuperDriver {
 			case PARTIAL_LINK_TEXT:
 				_where = waitAndGetByPartialLinkText(where);
 				_from = waitAndGetByPartialLinkText(from);
+				this.moveBetweenXAxis(mode, _from, _where);
+				break;
+			case CLASS_NAME:
+				_where = waitAndGetByClass(where);
+				_from = waitAndGetByClass(from);
 				this.moveBetweenXAxis(mode, _from, _where);
 				break;
 		}
@@ -553,6 +606,11 @@ public class SuperDriver {
 			case PARTIAL_LINK_TEXT:
 				_where = waitAndGetByPartialLinkText(where);
 				_from = waitAndGetByPartialLinkText(from);
+				this.moveBetweenYAxis(mode, _from, _where);
+				break;
+			case CLASS_NAME:
+				_where = waitAndGetByClass(where);
+				_from = waitAndGetByClass(from);
 				this.moveBetweenYAxis(mode, _from, _where);
 				break;
 		}
