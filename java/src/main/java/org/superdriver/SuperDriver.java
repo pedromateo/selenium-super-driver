@@ -1,6 +1,7 @@
 package org.superdriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.By.ByClassName;
 import org.openqa.selenium.By.ByCssSelector;
 import org.openqa.selenium.By.ById;
@@ -19,6 +20,7 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 
 public class SuperDriver {
 
@@ -397,6 +399,13 @@ public class SuperDriver {
 		WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 		wait.wait(WAIT_TIMEOUT);
 		_driver.switchTo().window(_driver.getWindowHandles().iterator().next());
+	}
+	
+	// Load a cookie inserting cookie name and token
+	
+	public void loadCookie(String name, String token) {
+		Cookie cookie = new Cookie(name, token);
+		_driver.manage().addCookie(cookie);
 	}
 	
 	///
