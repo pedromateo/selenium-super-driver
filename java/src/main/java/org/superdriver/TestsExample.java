@@ -11,7 +11,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class SeleniumTest {
+public class TestsExample {
 
 	//private static InternetExplorerDriver _driver;
 	private static ChromeDriver _driver;
