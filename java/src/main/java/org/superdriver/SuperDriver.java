@@ -953,6 +953,7 @@ public class SuperDriver {
 	 * Switch to the selected window. 0 = main window of the browser 
 	 * @param int number
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void switchToWindow(int number) {
 		ArrayList tabs = new ArrayList (_driver.getWindowHandles());
 		_driver.switchTo().window(tabs.get(number).toString());
@@ -1189,7 +1190,7 @@ public class SuperDriver {
 
 		for (Row row: sheet) {
 			int colum_count_of_the_row = 0;
-			for(Cell cell: row) {
+			for(@SuppressWarnings("unused") Cell cell: row) {
 				colum_count_of_the_row = colum_count_of_the_row +1;;
 				if (colum_count_of_the_row > colum_count_max) {
 					colum_count_max = colum_count_of_the_row;
