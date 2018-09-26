@@ -14,7 +14,7 @@ import org.openqa.selenium.support.How;
 
 /**
  * 
- * @author Adrian Nicolas Conesa,...
+ * @author Adrian Nicolas Conesa, Pedro Luís Mateo Navarro, ...
  *
  */
 @SuppressWarnings({"finally", "unused", "incomplete-switch"})

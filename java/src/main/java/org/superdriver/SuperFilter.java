@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import org.openqa.selenium.*;
 /**
  * 
- * @author Adrian Nicolas Conesa,...
+ * @author Adrian Nicolas Conesa, Pedro Luís Mateo Navarro, ...
  *
  */
 public class SuperFilter {
