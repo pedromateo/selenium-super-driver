@@ -1,6 +1,7 @@
 package org.superdriver;
 
 import java.awt.AWTException;
+
 import java.awt.Desktop;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -27,6 +28,7 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+@SuppressWarnings("unused")
 public class TestsExample {
 
 	//private static InternetExplorerDriver _driver;
@@ -347,6 +349,13 @@ public class TestsExample {
 			}
 			_sd.getByClass("js-randomFormContainer").findElement(By.className("btn-default")).click();
 		}
+	}
+	*/
+	
+	/*
+	@Test
+	public void takeScreenshot() throws Exception{
+		_sd.takeScreenshot();
 	}
 	*/
 

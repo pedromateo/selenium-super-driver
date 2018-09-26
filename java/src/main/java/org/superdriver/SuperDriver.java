@@ -1,15 +1,20 @@
 package org.superdriver;
 
 import java.awt.AWTException;
+import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javax.imageio.ImageIO;
 import javax.management.AttributeNotFoundException;
-
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -41,13 +46,12 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 /**
  * 
- * @author Adrian Nicolas Conesa,...
+ * @author Adrián Nicolás Conesa, Pedro Luís Mateo Navarro, ...
  *
  */
 @SuppressWarnings("incomplete-switch")
@@ -158,6 +162,7 @@ public class SuperDriver {
 		throw new TimeoutException();
 		}
 	}
+	
 	///
 	/// Wait and get
 	///
@@ -262,9 +267,6 @@ public class SuperDriver {
 		throw new NotFoundException("Element " + key + " not found");
 		}
 	}
-
-	// Using the driver methods, searches for an element (key) using a pattern 
-	// (how) All methods return a WebElement type object.
 	/**
 	 * Get a WebElement by Xpath locator.
 	 * @param key
@@ -273,8 +275,6 @@ public class SuperDriver {
 	public WebElement getByXpath(String key) {
 		ByXPath objetoBusqueda = new ByXPath(key);
 		return get(objetoBusqueda);
-		//  Using the driver methods, searches for an 
-		// element by XPATH (key) and returns it.
 	}
 	/**
 	 * Get a WebElement by Id locator.
@@ -284,7 +284,6 @@ public class SuperDriver {
 	public WebElement getByID(String key) {
 		ById objetoBusqueda = new ById(key);
 		return get(objetoBusqueda);
-		// Using the driver methods, searches for an element by ID (key) and returns it.
 	}
 	/**
 	 * Get a WebElement by Name locator.
@@ -294,8 +293,6 @@ public class SuperDriver {
 	public WebElement getByName(String key) {
 		ByName objetoBusqueda = new ByName(key);
 		return get(objetoBusqueda);
-
-		// Using the driver methods, searches for an element by ID (key) and returns it.
 	}
 	/**
 	 * Get a WebElement by CssSelector locator.
@@ -305,7 +302,6 @@ public class SuperDriver {
 	public WebElement getByCssSelector(String key) {
 		ByCssSelector objetoBusqueda = new ByCssSelector(key);
 		return get(objetoBusqueda);
-		// Using the driver methods, searches for an element by ID (key) and returns it.
 	}
 	/**
 	 * Get a WebElement by LinkText locator.
@@ -315,7 +311,6 @@ public class SuperDriver {
 	public WebElement getByLinkText(String key) {
 		ByLinkText objetoBusqueda = new ByLinkText(key);
 		return get(objetoBusqueda);
-		// Using the driver methods, searches for an element by ID (key) and returns it.
 	}
 	/**
 	 * Get a WebElement by PartialLinkText locator.
@@ -325,7 +320,6 @@ public class SuperDriver {
 	public WebElement getByPartialLinkText(String key) {
 		ByPartialLinkText objetoBusqueda = new ByPartialLinkText(key);
 		return get(objetoBusqueda);
-		// Using the driver methods, searches for an element by ID (key) and returns it.
 	}
 	/**
 	 * Get a WebElement by TagName locator.
@@ -335,8 +329,6 @@ public class SuperDriver {
 	public WebElement getByTagName(String key) {
 		ByTagName objetoBusqueda = new ByTagName(key);
 		return get(objetoBusqueda);
-		// Using the driver methods, searches for an element by ID 
-		// (key) and returns it.
 	}
 	/**
 	 * Get a WebElement by Class locator.
@@ -346,8 +338,6 @@ public class SuperDriver {
 	public WebElement getByClass(String key) {
 		ByClassName objetoBusqueda = new ByClassName(key);
 		return get(objetoBusqueda);
-		// Using the driver methods, searches for an element by ID 
-		// (key) and returns it.
 	}
 	/**
 	 * Using the driver methods, searches for an List<WebElements>.
@@ -505,31 +495,24 @@ public class SuperDriver {
 		}
 		else {throw new NoSuchElementException("WebElement not found.");}
 	}
-
 	public void clickByXpath(String key) {
 		click(How.XPATH, key);
 	}
-
 	public void clickByID(String key) {
 		click(How.ID, key);
 	}
-
 	public void clickByTagName(String key) {
 		click(How.TAG_NAME, key);
 	}
-
 	public void clickByName(String key) {
 		click(How.NAME, key);
 	}
-
 	public void clickByCssSelector(String key) {
 		click(How.CSS, key);
 	}
-
 	public void clickByLinkText(String key) {
 		click(How.LINK_TEXT, key);
 	}
-
 	public void clickByPartialLinkText(String key) {
 		click(How.PARTIAL_LINK_TEXT, key);
 	}
@@ -558,39 +541,30 @@ public class SuperDriver {
 		Select sel = new Select(elemento);
 		sel.selectByIndex(option);
 	}
-
 	public void selectOptionByXpathByIndex(String key, int option) {
 		selectOptionByIndex(How.XPATH, key, option);
 	}
-
 	public void selectOptionByIDByIndex(String key, int option) {
 		selectOptionByIndex(How.ID, key, option);
 	}
-
 	public void selectOptionByTagNameByIndex(String key, int option) {
 		selectOptionByIndex(How.TAG_NAME, key, option);
 	}
-
 	public void selectOptionByNameByIndex(String key, int option) {
 		selectOptionByIndex(How.NAME, key, option);
 	}
-
 	public void selectOptionCssSelectorByIndex(String key, int option) {
 		selectOptionByIndex(How.CSS, key, option);
 	}
-
 	public void selectOptionLinkTextByIndex(String key, int option) {
 		selectOptionByIndex(How.LINK_TEXT, key, option);
 	}
-
 	public void selectOptionPartialLinkTextByIndex(String key, int option) {
 		selectOptionByIndex(How.PARTIAL_LINK_TEXT, key, option);
 	}
-
 	public void selectOptionByClassByIndex(String key, int option) {
 		selectOptionByIndex(How.CLASS_NAME, key, option);
 	}
-
 	///By VisibleText
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
@@ -612,39 +586,30 @@ public class SuperDriver {
 		Select sel = new Select(elemento);
 		sel.selectByVisibleText(option);
 	}
-
 	public void selectOptionByXpathByVisibleText(String key, String option) {
 		selectOptionByVisibleText(How.XPATH, key, option);
 	}
-
 	public void selectOptionByIDByVisibleText(String key, String option) {
 		selectOptionByVisibleText(How.ID, key, option);
 	}
-
 	public void selectOptionByTagNameByVisibleText(String key, String option) {
 		selectOptionByVisibleText(How.TAG_NAME, key, option);
 	}
-
 	public void selectOptionByNameByVisibleText(String key, String option) {
 		selectOptionByVisibleText(How.NAME, key, option);
 	}
-
 	public void selectOptionCssSelectorByVisibleText(String key, String option) {
 		selectOptionByVisibleText(How.CSS, key, option);
 	}
-
 	public void selectOptionLinkTextByVisibleText(String key, String option) {
 		selectOptionByVisibleText(How.LINK_TEXT, key, option);
 	}
-
 	public void selectOptionPartialLinkTextByVisibleText(String key, String option) {
 		selectOptionByVisibleText(How.PARTIAL_LINK_TEXT, key, option);
 	}
-
 	public void selectOptionByClassByVisibleText(String key, String option) {
 		selectOptionByVisibleText(How.CLASS_NAME, key, option);
 	}
-
 	///By Value
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
@@ -666,35 +631,27 @@ public class SuperDriver {
 		Select sel = new Select(elemento);
 		sel.selectByValue(option);
 	}
-
 	public void selectOptionByXpathByValue(String key, String option) {
 		selectOptionByValue(How.XPATH, key, option);
 	}
-
 	public void selectOptionByIDByValue(String key, String option) {
 		selectOptionByValue(How.ID, key, option);
 	}
-
 	public void selectOptionByTagNameByValue(String key, String option) {
 		selectOptionByValue(How.TAG_NAME, key, option);
 	}
-
 	public void selectOptionByNameByValue(String key, String option) {
 		selectOptionByValue(How.NAME, key, option);
 	}
-
 	public void selectOptionCssSelectorByValue(String key, String option) {
 		selectOptionByValue(How.CSS, key, option);
 	}
-
 	public void selectOptionLinkTextByValue(String key, String option) {
 		selectOptionByValue(How.LINK_TEXT, key, option);
 	}
-
 	public void selectOptionPartialLinkTextByValue(String key, String option) {
 		selectOptionByValue(How.PARTIAL_LINK_TEXT, key, option);
 	}
-
 	public void selectOptionByClassByValue(String key, String option) {
 		selectOptionByValue(How.CLASS_NAME, key, option);
 	}
@@ -703,7 +660,6 @@ public class SuperDriver {
 	/// check if is selected and deSelect option
 	///
 	/// Deselect By index
-
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
 	 * @param mode
@@ -714,7 +670,6 @@ public class SuperDriver {
 		WebElement elemento = get(mode,key);
 		deSelectOptionByIndex(elemento, option);
 	}
-
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
 	 * @param elemento
@@ -725,39 +680,30 @@ public class SuperDriver {
 		Select sel = new Select(elemento);
 		sel.deselectByIndex(option);
 	}
-
 	public void deSelectOptionByXpathByIndex(String key, int option) {
 		deSelectOptionByIndex(How.XPATH, key, option);
 	}
-
 	public void deSelectOptionByIDByIndex(String key, int option) {
 		deSelectOptionByIndex(How.ID, key, option);
 	}
-
 	public void deSelectOptionByTagNameByIndex(String key, int option) {
 		deSelectOptionByIndex(How.TAG_NAME, key, option);
 	}
-
 	public void deSelectOptionByNameByIndex(String key, int option) {
 		deSelectOptionByIndex(How.NAME, key, option);
 	}
-
 	public void deSelectOptionByCssSelectorByIndex(String key, int option) {
 		deSelectOptionByIndex(How.CSS, key, option);
 	}
-
 	public void deSelectOptionByLinkTextByIndex(String key, int option) {
 		deSelectOptionByIndex(How.LINK_TEXT, key, option);
 	}
-
 	public void deSelectOptionByPartialLinkTextByIndex(String key, int option) {
 		deSelectOptionByIndex(How.PARTIAL_LINK_TEXT, key, option);
 	}
-
 	public void deSelectOptionByClassByIndex(String key, int option) {
 		deSelectOptionByIndex(How.CLASS_NAME, key, option);
 	}
-
 	///Deselect By VisibleText
 	/**
 	 * Deselect a option from a dropbox, radio button or checkbox.
@@ -780,39 +726,30 @@ public class SuperDriver {
 		sel = new Select(elemento);
 		sel.deselectByVisibleText(option);
 	}
-
 	public void deSelectOptionByXpathByVisibleText(String key, String option) {
 		deSelectOptionByVisibleText(How.XPATH, key, option);
 	}
-
 	public void deSelectOptionByIDByVisibleText(String key, String option) {
 		deSelectOptionByVisibleText(How.ID, key, option);
 	}
-
 	public void deSelectOptionByTagNameByVisibleText(String key, String option) {
 		deSelectOptionByVisibleText(How.TAG_NAME, key, option);
 	}
-
 	public void deSelectOptionByNameByVisibleText(String key, String option) {
 		deSelectOptionByVisibleText(How.NAME, key, option);
 	}
-
 	public void deSelectOptionCssSelectorByVisibleText(String key, String option) {
 		deSelectOptionByVisibleText(How.CSS, key, option);
 	}
-
 	public void deSelectOptionLinkTextByVisibleText(String key, String option) {
 		deSelectOptionByVisibleText(How.LINK_TEXT, key, option);
 	}
-
 	public void deSelectOptionPartialLinkTextByVisibleText(String key, String option) {
 		deSelectOptionByVisibleText(How.PARTIAL_LINK_TEXT, key, option);
 	}
-
 	public void deSelectOptionByClassByVisibleText(String key, String option) {
 		deSelectOptionByVisibleText(How.CLASS_NAME, key, option);
 	}
-
 	///Deselect By Value
 	/**
 	 * Deselect a option from a dropbox, radio button or checkbox.
@@ -834,39 +771,30 @@ public class SuperDriver {
 		Select sel = new Select(elemento);
 		sel.deselectByValue(option);
 	}
-
 	public void deSelectOptionByXpathByValue(String key, String option) {
 		deSelectOptionByValue(How.XPATH, key, option);
 	}
-
 	public void deSelectOptionByIDByValue(String key, String option) {
 		deSelectOptionByValue(How.ID, key, option);
 	}
-
 	public void deSelectOptionByTagNameByValue(String key, String option) {
 		deSelectOptionByValue(How.TAG_NAME, key, option);
 	}
-
 	public void deSelectOptionByNameByValue(String key, String option) {
 		deSelectOptionByValue(How.NAME, key, option);
 	}
-
 	public void deSelectOptionCssSelectorByValue(String key, String option) {
 		deSelectOptionByValue(How.CSS, key, option);
 	}
-
 	public void deSelectOptionLinkTextByValue(String key, String option) {
 		deSelectOptionByValue(How.LINK_TEXT, key, option);
 	}
-
 	public void deSelectOptionPartialLinkTextByValue(String key, String option) {
 		deSelectOptionByValue(How.PARTIAL_LINK_TEXT, key, option);
 	}
-
 	public void deSelectOptionByClassByValue(String key, String option) {
 		deSelectOptionByValue(How.CLASS_NAME, key, option);
 	}
-
 	///deselect all
 	/**
 	 * Deselect all the options from a multiple choose box, radio button or checkbox.
@@ -884,7 +812,7 @@ public class SuperDriver {
 	public void deSelectAllOptions(WebElement elemento) {
 		waitForElementVisibility(elemento);
 		Select sel = new Select(elemento);
-		sel.deselectAll();;
+		sel.deselectAll();
 	}
 
 	///
@@ -912,35 +840,27 @@ public class SuperDriver {
 		else {throw new NoSuchElementException("Element not found.");
 		}
 	}
-
 	public void sendKeysByID(String elem, String sendKey) {
 		sendKeys(How.ID, elem, sendKey);
 	}
-
 	public void sendKeysByXpath(String elem, String sendKey) {
 		sendKeys(How.XPATH, elem, sendKey);
 	}
-
 	public void sendKeysByTagName(String elem, String sendKey) {
 		sendKeys(How.TAG_NAME, elem, sendKey);
 	}
-
 	public void sendKeysByName(String elem, String sendKey) {
 		sendKeys(How.NAME, elem, sendKey);
 	}
-
 	public void sendKeysByCssSelector(String elem, String sendKey) {
 		sendKeys(How.CSS, elem, sendKey);
 	}
-
 	public void sendKeysByLinkText(String elem, String sendKey) {
 		sendKeys(How.LINK_TEXT, elem, sendKey);
 	}
-
 	public void sendKeysByPartialLinkText(String elem, String sendKey) {
 		sendKeys(How.PARTIAL_LINK_TEXT, elem, sendKey);
 	}
-
 	public void sendKeysByClass(String elem, String sendKey) {
 		sendKeys(How.CLASS_NAME, elem, sendKey);
 	}
@@ -982,14 +902,12 @@ public class SuperDriver {
 		robot.keyRelease(KeyEvent.VK_SHIFT);
 		robot.keyRelease(KeyEvent.VK_TAB);
 	}
-
 	/**
 	 * Maximize window
 	 */
 	public void maximize() {
 		_driver.manage().window().maximize();
 	}
-
 	/**
 	 * Switch to last window and maximize it
 	 * @throws InterruptedException
@@ -1002,7 +920,6 @@ public class SuperDriver {
 		}
 		this.maximize();
 	}
-
 	/**
 	 * Switch to main window and maximize it
 	 * @throws InterruptedException
@@ -1012,7 +929,6 @@ public class SuperDriver {
 		wait.wait(WAIT_TIMEOUT);
 		_driver.switchTo().window(_driver.getWindowHandles().iterator().next());
 	}
-
 	/**
 	 * Load a cookie inserting cookie name and token
 	 * @param name
@@ -1024,7 +940,7 @@ public class SuperDriver {
 	}
 	/// Delete cookies
 	/**
-	 * Delete all the cockies of the browser.
+	 * Delete all the cookies of the browser.
 	 */
 	public void deletecookies() {
 		_driver.manage().deleteAllCookies();
@@ -1074,6 +990,7 @@ public class SuperDriver {
 		y= location.getY();
 		builder.moveByOffset(x,y).moveToElement(where).perform();
 	}
+	
 	///
 	/// Wait and hover
 	///
@@ -1141,6 +1058,7 @@ public class SuperDriver {
 		}
 		return flag;
 	}
+	
 	///
 	///PDF methods
 	///
@@ -1166,6 +1084,7 @@ public class SuperDriver {
 		}
 		return exist;
 	}
+	
 	///
 	///Excel Methods
 	///
@@ -1191,7 +1110,7 @@ public class SuperDriver {
 		for (Row row: sheet) {
 			int colum_count_of_the_row = 0;
 			for(@SuppressWarnings("unused") Cell cell: row) {
-				colum_count_of_the_row = colum_count_of_the_row +1;;
+				colum_count_of_the_row = colum_count_of_the_row +1;
 				if (colum_count_of_the_row > colum_count_max) {
 					colum_count_max = colum_count_of_the_row;
 				}
@@ -1231,6 +1150,66 @@ public class SuperDriver {
 		// Closing the workbook
 		workbook.close();
 		return data;
+	}
+	
+	///
+	/// Delete file or directory
+	///
+	/**
+	 * Force deletion of directory
+	 * @param path
+	 */
+	public void DeleteFileOrFolder(String path) {
+		File file = new File(path);
+		if(file.exists()) {
+			do {
+				delete(file);
+			}
+			while(file.exists());
+		}
+		else {
+			System.out.println("File or Folder not found : "+path);
+		}
+	}
+	private void delete(File file) {
+		if(file.isDirectory()) {
+			String fileList[] = file.list();
+			if(fileList.length == 0) {
+				System.out.println("Deleting Directory : "+file.getPath());
+				file.delete();
+			}
+			else {
+				int size = fileList.length;
+				for(int i = 0 ; i < size ; i++) {
+					String fileName = fileList[i];
+					System.out.println("File path : "+file.getPath()+" and name :"+fileName);
+					String fullPath = file.getPath()+"/"+fileName;
+					File fileOrFolder = new File(fullPath);
+					System.out.println("Full Path :"+fileOrFolder.getPath());
+					delete(fileOrFolder);
+				}
+			}
+		}
+		else {
+			System.out.println("Deleting file : "+file.getPath());
+			file.delete();
+		}
+	}
+
+	///
+	/// Screenshot method
+	///
+	/**
+	 * Takes a Screenshot of the open Tab
+	 * @throws Exception
+	 */
+	public void takeScreenshot() throws Exception{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd hh mm ss a");
+		Calendar now = Calendar.getInstance();
+		Robot robot = new Robot();
+		BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+		ImageIO.write(screenShot, "JPG", new File("./Screenshots/"+formatter.format(now.getTime())+".jpg"));
+		System.out.println(formatter.format(now.getTime()));
 	}
 
 }
