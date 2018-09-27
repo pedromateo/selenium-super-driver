@@ -30,6 +30,9 @@ public class SuperChecker {
 	public SuperChecker(SuperDriver sd) {
 		_sd = sd;
 	}
+	
+	
+	
 	/**
 	 * Check the presence of a WebElement.
 	 * @param mode
@@ -71,6 +74,7 @@ public class SuperChecker {
 			return false;
 		}
 	}
+	
 	/**
 	 * Check the presence of a WebElement by Xpath.
 	 * @param mode
@@ -80,6 +84,7 @@ public class SuperChecker {
 	public boolean elementPresentByXpath(String elem) {
 		return elementPresent(How.XPATH, elem);
 	}
+	
 	/**
 	 * Check the presence of a WebElement by Id.
 	 * @param mode
@@ -89,6 +94,7 @@ public class SuperChecker {
 	public boolean elementPresentByID(String elem) {
 		return elementPresent(How.ID, elem);
 	}
+	
 	/**
 	 * Check the presence of a WebElement by TagName.
 	 * @param mode
@@ -98,6 +104,7 @@ public class SuperChecker {
 	public boolean elementPresentByTagName(String elem) {
 		return elementPresent(How.TAG_NAME, elem);
 	}
+	
 	/**
 	 * Check the presence of a WebElement by Name.
 	 * @param mode
@@ -107,6 +114,7 @@ public class SuperChecker {
 	public boolean elementPresentByName(String elem) {
 		return elementPresent(How.NAME, elem);
 	}
+	
 	/**
 	 * Check the presence of a WebElement by Css.
 	 * @param mode
@@ -116,6 +124,7 @@ public class SuperChecker {
 	public boolean elementPresentByCss(String elem) {
 		return elementPresent(How.CSS, elem);
 	}
+	
 	/**
 	 * Check the presence of a WebElement by LinkText.
 	 * @param mode
@@ -125,6 +134,7 @@ public class SuperChecker {
 	public boolean elementPresentByLinkText(String elem) {
 		return elementPresent(How.LINK_TEXT, elem);
 	}
+	
 	/**
 	 * Check the presence of a WebElement by PartialLinkText.
 	 * @param mode
@@ -134,6 +144,7 @@ public class SuperChecker {
 	public boolean elementPresentByPartialLinkText(String elem) {
 		return elementPresent(How.PARTIAL_LINK_TEXT, elem);
 	}
+	
 	/**
 	 * Check the presence of a WebElement by Class.
 	 * @param mode
@@ -143,6 +154,7 @@ public class SuperChecker {
 	public boolean elementPresentByClass(String elem) {
 		return elementPresent(How.CLASS_NAME, elem);
 	}
+	
 	/**
 	 * Gets a screenshot.
 	 * @param driver
@@ -150,16 +162,16 @@ public class SuperChecker {
 	 */
 	public static void captureScreenShot(WebDriver ldriver){
 		// Take screenshot and store as a file format             
-		File src=((TakesScreenshot)ldriver).getScreenshotAs(OutputType.FILE);           
+		File src=((TakesScreenshot)ldriver).getScreenshotAs(OutputType.FILE);
 		try {
 			// now copy the  screenshot to desired location using copyFile method
-
-			FileUtils.copyFile(src, new File("C:\\Users\\SAMUEL\\Desktop\\/"+System.currentTimeMillis()+".png"));                             
+			FileUtils.copyFile(src, new File("/superdriver/AssertScreenshots" + System.currentTimeMillis() + ".png"));                             
 		} 
 		catch (IOException e){
 			System.out.println(e.getMessage()); 
 		}
 	}
+	
 	/**
 	 * Asserts that a condition is true. If it isn't it throws an
 	 * {@link AssertionError} with the given message.
@@ -168,34 +180,36 @@ public class SuperChecker {
 	 * okay)
 	 * @param condition condition to be checked
 	 */
-	public void assertTrue(String message, boolean condition, WebDriver ldriver) {
+	public void assertTrue(String message, boolean condition) {
 		try {
 			org.junit.Assert.assertTrue(message, condition);
 		} catch (AssertionError err) {
 			try{
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
+
 	/**
 	 * Asserts that a condition is true. If it isn't it throws an
 	 * {@link AssertionError} without a message.
 	 *
 	 * @param condition condition to be checked
 	 */
-	public void assertTrue(boolean condition, WebDriver ldriver) {
+	public void assertTrue(boolean condition) {
 		try {
 			org.junit.Assert.assertTrue(condition);
 		} catch (AssertionError err) {
 			try{
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
+	
 	/**
 	 * Asserts that a condition is false. If it isn't it throws an
 	 * {@link AssertionError} with the given message.
@@ -204,34 +218,36 @@ public class SuperChecker {
 	 * okay)
 	 * @param condition condition to be checked
 	 */
-	public void assertFalse(String message, boolean condition, WebDriver ldriver) {
+	public void assertFalse(String message, boolean condition) {
 		try {
 			org.junit.Assert.assertFalse(message, condition);
 		} catch (AssertionError err) {
 			try{
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
+	
 	/**
 	 * Asserts that a condition is false. If it isn't it throws an
 	 * {@link AssertionError} without a message.
 	 *
 	 * @param condition condition to be checked
 	 */
-	public void assertFalse(boolean condition, WebDriver ldriver) {
+	public void assertFalse(boolean condition) {
 		try {
 			org.junit.Assert.assertFalse(condition);
 		} catch (AssertionError err) {
 			try{
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
+	
 	/**
 	 * Fails a test with the given message.
 	 *
@@ -239,31 +255,33 @@ public class SuperChecker {
 	 * okay)
 	 * @see AssertionError
 	 */
-	public void fail(String message, WebDriver ldriver) {
+	public void fail(String message) {
 		try {
 			org.junit.Assert.fail(message);
 		} catch (AssertionError err) {
 			try{
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
+	
 	/**
 	 * Fails a test with no message.
 	 */
-	public void fail(WebDriver ldriver) {
+	public void fail() {
 		try {
 			org.junit.Assert.fail();
 		} catch (AssertionError err) {
 			try{
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
+	
 	/**
 	 * Asserts that two objects are equal. If they are not, an
 	 * {@link AssertionError} is thrown with the given message. If
@@ -274,17 +292,18 @@ public class SuperChecker {
 	 * @param expected expected value
 	 * @param actual actual value
 	 */
-	public void assertEquals(String message, Object expected, Object actual, WebDriver ldriver) {
+	public void assertEquals(String message, Object expected, Object actual) {
 		try {
 			org.junit.Assert.assertEquals(message, expected, actual);
 		} catch (AssertionError err) {
 			try{
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
+	
 	/**
 	 * Asserts that two objects are equal. If they are not, an
 	 * {@link AssertionError} without a message is thrown. If
@@ -294,25 +313,26 @@ public class SuperChecker {
 	 * @param expected expected value
 	 * @param actual the value to check against <code>expected</code>
 	 */
-	public void assertEquals(Object expected, Object actual, WebDriver ldriver) {
+	public void assertEquals(Object expected, Object actual) {
 		try {
 			org.junit.Assert.assertEquals(expected, actual);
 		} catch (AssertionError err) {
 			try{
-
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
-	public void assertArrayEquals(String message, Object[] expecteds, Object[] actuals, WebDriver ldriver) throws ArrayComparisonFailure {
+	
+	
+	public void assertArrayEquals(String message, Object[] expecteds, Object[] actuals) throws ArrayComparisonFailure {
 		try {
 			org.junit.Assert.assertArrayEquals(message, expecteds, actuals);
 		} catch (AssertionError err) {
 			try{
 
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
@@ -324,213 +344,119 @@ public class SuperChecker {
 	 * <code>actual</code> are <code>null</code>, they are considered
 	 * equal.
 	 *
-	 * @param expecteds Object array or array of arrays (multi-dimensional array) with
-	 * expected values
-	 * @param actuals Object array or array of arrays (multi-dimensional array) with
-	 * actual values
+	 * @param expected array or multi-dimensional array with expected values
+	 * @param actuals Object array or multi-dimensional array with actual values
 	 */
-	public void assertArrayEquals(Object[] expecteds, Object[] actuals, WebDriver ldriver) throws ArrayComparisonFailure {
+	public void assertArrayEquals(Object[] expecteds, Object[] actuals) throws ArrayComparisonFailure {
 		try {
 			org.junit.Assert.assertArrayEquals(expecteds, actuals);
 		} catch (AssertionError err) {
 			try{
 
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
-	public void assertArrayEquals(String message, byte[] expecteds, byte[] actuals, WebDriver ldriver) throws ArrayComparisonFailure {
-		try {
-			org.junit.Assert.assertArrayEquals(message, expecteds, actuals);
-		} catch (AssertionError err) {
-			try{
-
-				captureScreenShot(ldriver);
-			} finally {
-				throw err;
-			}
-		}
-	}
-	public void assertArrayEquals(byte[] expecteds, byte[] actuals, WebDriver ldriver) {
-		try {
-			org.junit.Assert.assertArrayEquals(expecteds, actuals);
-		} catch (AssertionError err) {
-			try{
-
-				captureScreenShot(ldriver);
-			} finally {
-				throw err;
-			}
-		}
-	}
-	protected void assertArrayEquals(String message, char[] expecteds, char[] actuals, WebDriver ldriver) throws ArrayComparisonFailure {
-		try {
-			org.junit.Assert.assertArrayEquals(message, expecteds, actuals);
-		} catch (AssertionError err) {
-			try{
-
-				captureScreenShot(ldriver);
-			} finally {
-				throw err;
-			}
-		}
-	}
-	public void assertArrayEquals(char[] expecteds, char[] actuals, WebDriver ldriver) {
-		try {
-			org.junit.Assert.assertArrayEquals(expecteds, actuals);
-		} catch (AssertionError err) {
-			try{
-
-				captureScreenShot(ldriver);
-			} finally {
-				throw err;
-			}
-		}
-	}
-	public void assertArrayEquals(String message, short[] expecteds, short[] actuals, WebDriver ldriver) throws ArrayComparisonFailure {
-		try {
-			org.junit.Assert.assertArrayEquals(message, expecteds, actuals);
-		} catch (AssertionError err) {
-			try{
-
-				captureScreenShot(ldriver);
-			} finally {
-				throw err;
-			}
-		}
-	}
-	public void assertArrayEquals(short[] expecteds, short[] actuals, WebDriver ldriver) {
-		try {
-			org.junit.Assert.assertArrayEquals(expecteds, actuals);
-		} catch (AssertionError err) {
-			try{
-
-				captureScreenShot(ldriver);
-			} finally {
-				throw err;
-			}
-		}
-	}
-	public void assertArrayEquals(String message, int[] expecteds, int[] actuals, WebDriver ldriver) throws ArrayComparisonFailure {
-		try {
-			org.junit.Assert.assertArrayEquals(message, expecteds, actuals);
-		} catch (AssertionError err) {
-			try{
-
-				captureScreenShot(ldriver);
-			} finally {
-				throw err;
-			}
-		}
-	}
-	public void assertArrayEquals(int[] expecteds, int[] actuals, WebDriver ldriver) {
-		try {
-			org.junit.Assert.assertArrayEquals(expecteds, actuals);
-		} catch (AssertionError err) {
-			try{
-
-				captureScreenShot(ldriver);
-			} finally {
-				throw err;
-			}
-		}
-	}
-	public void assertNotNull(String message, Object object, WebDriver ldriver) {
+	
+	public void assertNotNull(String message, Object object) {
 		try {
 			org.junit.Assert.assertNotNull(message, object);
 		} catch (AssertionError err) {
 			try{
 
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
-	public void assertNotNull(Object object, WebDriver ldriver) {
+	
+	public void assertNotNull(Object object) {
 		try {
 			org.junit.Assert.assertNotNull(object);
 		} catch (AssertionError err) {
 			try{
 
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
-	protected void assertNull(String message, Object object, WebDriver ldriver) {
+	
+	protected void assertNull(String message, Object object) {
 		try {
 			org.junit.Assert.assertNull(message, object);
 		} catch (AssertionError err) {
 			try{
-
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
-	protected void assertNull(Object object, WebDriver ldriver) {
+	
+	protected void assertNull(Object object) {
 		try {
 			org.junit.Assert.assertNull(object);
 		} catch (AssertionError err) {
 			try{
-
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
-	public void assertSame(String message, Object expected, Object actual, WebDriver ldriver) {
+	
+	public void assertSame(String message, Object expected, Object actual) {
 		try {
 			org.junit.Assert.assertSame(message, expected, actual);
 		} catch (AssertionError err) {
 			try{
-
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
-	public void assertSame(Object expected, Object actual, WebDriver ldriver) {
+	
+	public void assertSame(Object expected, Object actual) {
 		try {
 			org.junit.Assert.assertSame(expected, actual);
 		} catch (AssertionError err) {
 			try{
-
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
-	protected void assertNotSame(String message, Object unexpected, Object actual, WebDriver ldriver) {
+	
+	protected void assertNotSame(String message, Object unexpected, Object actual) {
 		try {
 			org.junit.Assert.assertNotSame(message, unexpected, actual);
 		} catch (AssertionError err) {
 			try{
-
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
-	protected void assertNotSame(Object unexpected, Object actual, WebDriver ldriver) {
+	
+	protected void assertNotSame(Object unexpected, Object actual) {
 		try {
 			org.junit.Assert.assertNotSame(unexpected, actual);
 		} catch (AssertionError err) {
 			try{
-
-				captureScreenShot(ldriver);
+				_sd.takeScreenshot("/superdriver/AssertScreenshots");
 			} finally {
 				throw err;
 			}
 		}
 	}
+	
+	
 }

@@ -214,6 +214,15 @@ public class TestsExample {
 	}
 	*/
 	
+	/*
+	@Test
+	public void waits(){
+		_sd.waitForElementPresenceBy(How.ID, "lst-ib");
+		_sd.waitForElementVisibilityBy(How.ID, "lst-ib");
+		_sd.waitTime(100);
+	}
+	*/
+	
 	@AfterClass
 	public static void testOut(){
 		_driver.quit();

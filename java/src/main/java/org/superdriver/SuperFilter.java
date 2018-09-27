@@ -3,6 +3,8 @@ package org.superdriver;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.openqa.selenium.*;
+
+
 /**
  * 
  * @author Adrian Nicolas Conesa, Pedro Luís Mateo Navarro, ...
@@ -35,6 +37,8 @@ public class SuperFilter {
 	public SuperFilter(SuperDriver sd) {
 		_sd = sd;
 	}
+	
+	
 	/**
 	 * Condition to filter by attribute a List<WebElement>.
 	 * 
@@ -55,6 +59,8 @@ public class SuperFilter {
 		att_value = value;
 		return this;
 	}
+	
+	
 	/**
 	 * Condition to filter by InnerText a List<WebElement>.
 	 * 
@@ -73,6 +79,8 @@ public class SuperFilter {
 		txt_value = value;
 		return this;
 	}
+	
+	
 	/**
 	 * Condition to filter by CSSValue a List<WebElement>.
 	 * 
@@ -93,6 +101,8 @@ public class SuperFilter {
 		css_value = value;
 		return this;
 	}
+	
+	
 	/**
 	 * Condition to filter by TagName a List<WebElement>.
 	 * 				List<WebElement>
@@ -110,13 +120,15 @@ public class SuperFilter {
 		tag_value = value;
 		return this;
 	}
+	
+	
 	/**
 	 * Condition to filter by TagName a List<WebElement>.
 	 * 				List<WebElement>
 						.stream()
 						.filter(a -> a.getTagName().contains(value))
 						.collect(Collectors.toList());	
-
+						
 	 * @param String value
 	 * @param String exactmatch = false
 	 * @return
@@ -124,6 +136,8 @@ public class SuperFilter {
 	public SuperFilter ByTagName(String value) {
 		return ByTagName(value,false);
 	}
+	
+	
 	/**
 	 * Condition to filter by CSSValue a List<WebElement>.
 	 * 
@@ -140,6 +154,8 @@ public class SuperFilter {
 	public SuperFilter ByCssValue(String key, String value) {
 		return ByCssValue(key, value, false);
 	}
+	
+	
 	/**
 	 * Condition to filter by InnerText a List<WebElement>.
 	 * 
@@ -155,6 +171,8 @@ public class SuperFilter {
 	public SuperFilter ByInnerText(String value) {
 		return ByInnerText(value, false);
 	}
+	
+	
 	/**
 	 * Condition to filter by InnerText a List<WebElement>.
 	 * 
@@ -170,6 +188,8 @@ public class SuperFilter {
 	public SuperFilter ByAttribute(String key, String value) {
 		return ByAttribute(key, value, false);
 	}
+	
+	
 	/**
 	 * This method applies all the chained filters on a List<WebElement>.
 	 * @param List<WebElement>
@@ -244,6 +264,8 @@ public class SuperFilter {
 			return filteredlist;
 		}
 	}
+	
+	
 	/**
 	 * Get a List<String> of the attributes of List<WebElement>.
 	 * 
@@ -253,7 +275,6 @@ public class SuperFilter {
 						.collect(Collectors.toList());
 
 					return mappedlist;
-
 
 	 * @param List<WebElement>
 	 * @param key
@@ -269,6 +290,8 @@ public class SuperFilter {
 		}
 		return mappedlist;
 	}
+	
+	
 	/**
 	 * Get a List<String> of the Text of List<WebElement>.
 	 * 
@@ -278,7 +301,6 @@ public class SuperFilter {
 						.collect(Collectors.toList());
 
 					return mappedlist;
-
 
 	 * @param List<WebElement>
 	 * @return List<String>
@@ -293,6 +315,8 @@ public class SuperFilter {
 		}
 		return mappedlist;
 	}
+	
+	
 	/**
 	 * Clean all the conditions of the filter.
 	 */
