@@ -97,7 +97,7 @@ public class SuperDriver {
 	protected static <a> void _log(a msg) {
 		if (log_enabled)
 			System.out.println(LOG_TAG + msg);
-		}
+	}
 	
 
 	///
@@ -1214,6 +1214,10 @@ public class SuperDriver {
 		waitForFileDownloaded(filename, directory, 120);
 	}
 	
+	public void waitForFileDownloaded(String filename) throws IOException, InterruptedException { 
+		waitForFileDownloaded(filename, "./pruebas/downloads", 120);
+	}
+	
 	/**
 	 * Check if a file exist in a folder.
 	 * @param fileName
@@ -1399,7 +1403,7 @@ public class SuperDriver {
 	}
 	
 	public void takeScreenshot() throws Exception, FileNotFoundException{
-		takeScreenshot("./pruebas/");
+		takeScreenshot("./pruebas/screenshot");
 	}
 	
 }

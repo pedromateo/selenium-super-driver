@@ -45,12 +45,9 @@ public class TestsExample {
 
 	@BeforeClass
 	public static void testIn() {
-
-
-
 		/// Need to configure a custom driver? Do it here...
 
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\aconesa\\Downloads\\chromedriver_win32\\chromedriver_1.exe");		
+		System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");		
 		ChromeOptions options = new ChromeOptions();
 		HashMap<String, Object> chromeOptions = new HashMap<String, Object>();
 		chromeOptions.put("plugins.plugins_disabled", new String[] {"Chrome PDF Viewer"});
@@ -111,7 +108,8 @@ public class TestsExample {
 	@Test
 	public void downloadPrueba() throws InterruptedException, AttributeNotFoundException, IOException{
 		_sd.loadURL("https://www.thinkbroadband.com/download");
-		_sd.waitForFileDownload("5MB.zip", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas", _sd.getByXpath("//*[@id=\"main-col\"]/div/div/div[8]/p[1]/a/img"));
+		_sd.clickByXpath("//*[@id=\"main-col\"]/div/div/div[8]/p[1]/a/img");
+		_sd.waitForFileDownloaded("5MB.zip", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas");
 	}
 	*/
 	
@@ -222,6 +220,13 @@ public class TestsExample {
 		_sd.waitTime(100);
 	}
 	*/
+	
+	
+	@Test
+	public void prueba(){
+		_sd.loadURL("https://www.pccomponentes.com/?gclid=EAIaIQobChMIoIu-vNjd3QIVjLTtCh3ThggFEAAYASAAEgJ-pfD_BwE");
+		_sd.waitForElementPresenceBy(How.CLASS_NAME, "GTM-productClick");
+	}
 	
 	@AfterClass
 	public static void testOut(){
