@@ -4,13 +4,25 @@ Wrap classes to make Selenium easier, cleaner and more robust
 
 ## Introduction
 
-SuperDriver is a framework that improve and simplify the automatic testing proccess. It is especially useful for beginners and those that want to implement the automatic testing process, cutting down on the learning time and the amount of the mistakes that inexperience inevitably brings. The main characteristics of SuperDriver are robustness, understability and reusability.
-SuperDriver simplifies complex tests, obtaining fewer errors and being these more understandable. Another factor to take into consideration is the reduction of the code volume, making it easier to read and understand and and making the code more reusable.
+SuperDriver improves and simplifies the automatic testing proccess with standard Selenium. Specially aimed at automation beginners, SuperDriver reduces learning time as well as development time, increasing robustness at the same time. SuperDriver includes also SuperChecker in order to ease those checks done during testing.
 
-## Set-up
+SuperDriver makes tests more robust, their code shorter and more understandable, and the automation project more reusable.
 
-## Creating the SuperDriver and SuperChecker objects
 
-## Usage examples
+## Include SuperDriver in your project
 
+- opción de maven + código que hay que meter en el pom
+
+- u opción de descargarse el proyecto
+
+
+## Usage example of SuperDriver and SuperChecker
+
+
+## Comparison of code between SuperDriver and original
+
+
+## Other usage examples
+
+- explicar aquí lo de las clases con ejemplos. Se enumeran y se dice lo qeu llevan
 
