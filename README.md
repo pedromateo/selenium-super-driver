@@ -1,6 +1,6 @@
-# selenium-super-driver
+# Selenium SuperDriver
 
-Wrap classes to make Selenium easier, cleaner and more robust
+Framework to make Selenium easier, lighter, cleaner and more robust.
 
 ## Introduction
 
