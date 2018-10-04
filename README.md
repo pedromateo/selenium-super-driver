@@ -23,10 +23,10 @@ To work with SuperDriver once you have it included in your proyect you only need
 1) Create a class where you are going to run your tests.
 2) Declare as global variables the drivers.
 
-    private static ChromeDriver _driver;
-	  private static SuperDriver _sd;
-	  private static SuperChecker _sc;
-    private static SuperFilter _sf;
+		private static ChromeDriver _driver;
+		private static SuperDriver _sd;
+		private static SuperChecker _sc;
+		private static SuperFilter _sf;
     
 3) Create an object from the original driver.
 
@@ -47,8 +47,8 @@ Here is an example of the code that you need to make a login in a testing websit
 
 With SuperDriver.
 
-  public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
-    _sd.loadURL("http://automationpractice.com/index.php");
+ 	 public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
+   		_sd.loadURL("http://automationpractice.com/index.php");
 		_sd.click(How.CLASS_NAME, "login");
 		_sd.sendKeys(How.ID, "email", "prueba001@email.com");
 		_sd.sendKeys(How.ID, "passwd", "password");
