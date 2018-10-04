@@ -69,7 +69,7 @@ With SuperDriver.
 		_driver.findElement(By.id("passwd")).sendKeys("password");
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("SubmitLogin")));
 		_driver.findElement(By.id("SubmitLogin")).click();
-}
+	}
 
 
 ## Other usage examples
