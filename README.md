@@ -47,7 +47,7 @@ Here is an example of the code that you need to make a login in a testing websit
 
 With SuperDriver.
 
- 	 public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
+	public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
    		_sd.loadURL("http://automationpractice.com/index.php");
 		_sd.click(How.CLASS_NAME, "login");
 		_sd.sendKeys(How.ID, "email", "prueba001@email.com");
