@@ -92,15 +92,15 @@ public class TestsExample {
 		System.out.println("Starting test " + new Object(){}.getClass().getEnclosingMethod().getName());
 		_sd.loadURL("http://localhost:4002/");
 		_sd.maximize();
-		_sd.clickByXpath("//*[@id=\"navbarColor02\"]/ul[1]/li[1]/a");
-		_sc.assertElementPresent("/html/body/app-root/app-form-list/div/app-table/table/tbody/tr[2]/td[1]");
-		_sd.clickByXpath("/html/body/app-root/app-form-list/div/app-table/table/tbody/tr[2]/td[1]");
-		_sc.assertElementPresent("/html/body/app-root/app-form-list/app-dialog[2]/div/div/div/div[2]/card-body/button");
-		_sd.clickByXpath("/html/body/app-root/app-form-list/app-dialog[2]/div/div/div/div[2]/card-body/button");
-		_sd.clickByXpath("//*[@id=\"steps-canvas\"]/li[1]/button/i");
-		_sd.dragAndDrop(How.XPATH, "//*[@id=\"1\"]/button", "//*[@id=\"0\"]/div/div");
-		_sd.clickByXpath("/html/body/app-root/app-drap-and-drop/div[1]/button/i");
-		_sc.assertElementPresent("//*[@id=\"form-preview\"]/div/div/form/formly-form/formly-field/formly-wrapper-fieldset/div/formly-wrapper-label/label");
+		_sd.click(By.xpath("//*[@id=\"navbarColor02\"]/ul[1]/li[1]/a"));
+		_sc.elementPresent(By.xpath("/html/body/app-root/app-form-list/div/app-table/table/tbody/tr[2]/td[1]"));
+		_sd.click(By.xpath("/html/body/app-root/app-form-list/div/app-table/table/tbody/tr[2]/td[1]"));
+		_sc.elementPresent(By.xpath("/html/body/app-root/app-form-list/app-dialog[2]/div/div/div/div[2]/card-body/button"));
+		_sd.click(By.xpath("/html/body/app-root/app-form-list/app-dialog[2]/div/div/div/div[2]/card-body/button"));
+		_sd.click(By.xpath("//*[@id=\"steps-canvas\"]/li[1]/button/i"));
+		_sd.dragAndDrop(By.xpath("//*[@id=\"1\"]/button"), By.xpath("//*[@id=\"0\"]/div/div"));
+		_sd.click(By.xpath("/html/body/app-root/app-drap-and-drop/div[1]/button/i"));
+		_sc.elementPresent(By.xpath("//*[@id=\"form-preview\"]/div/div/form/formly-form/formly-field/formly-wrapper-fieldset/div/formly-wrapper-label/label"));
 	}
 	*/
 
@@ -108,7 +108,7 @@ public class TestsExample {
 	@Test
 	public void downloadPrueba() throws InterruptedException, AttributeNotFoundException, IOException{
 		_sd.loadURL("https://www.thinkbroadband.com/download");
-		_sd.clickByXpath("//*[@id=\"main-col\"]/div/div/div[8]/p[1]/a/img");
+		_sd.click(By.xpath("//*[@id=\"main-col\"]/div/div/div[8]/p[1]/a/img"));
 		_sd.waitForFileDownloaded("5MB.zip", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas");
 	}
 	*/
@@ -130,12 +130,12 @@ public class TestsExample {
 	public void valid_UserCredential(){
 		System.out.println("Starting test " + new Object(){}.getClass().getEnclosingMethod().getName());
 		_sd.loadURL("http://www.store.demoqa.com");	
-		_sd.clickByXpath(".//*[@id='account']/a");
-		_sd.sendKeysByID("log", "murciatest1");
-		_sd.sendKeysByID("pwd", "murcia20,8");
-		_sd.clickByID("login");
+		_sd.click(By.xpath(".//*[@id='account']/a"));
+		_sd.sendKeys(By.id("log"), "murciatest1");
+		_sd.sendKeys(By.id("pwd"), "murcia20,8");
+		_sd.click(By.id("login"));
 		//try{
-		_sc.assertElementPresent(".//*[@id='account_logout']/a");
+		_sc.elementPresent(By.xpath(".//*[@id='account_logout']/a"));
 	}
 	*/
 
@@ -144,12 +144,12 @@ public class TestsExample {
 	public void novalid_UserCredential(){
 		System.out.println("Starting test " + new Object(){}.getClass().getEnclosingMethod().getName());
 		_sd.loadURL("http://www.store.demoqa.com");	
-		_sd.clickByXpath(".//*[@id='account']/a");
-		_sd.sendKeysByName("log", "testuser_3");
-		_sd.sendKeysByID("pwd", "Test@123");
-		_sd.clickByID("login");
+		_sd.click(By.xpath(".//*[@id='account']/a"));
+		_sd.sendKeys(By.name("log"), "testuser_3");
+		_sd.sendKeys(By.id("pwd"), "Test@123");
+		_sd.click(By.id("login"));
 		//try{
-		_sc.assertElementPresent(".//*[@id='account_logout']/a");
+		_sc.elementPresent(By.xpath(".//*[@id='account_logout']/a"));
 	}
 	*/
 	
@@ -160,19 +160,22 @@ public class TestsExample {
 	}
 	*/
 	
-	/*
+	
 	@Test
 	public void AutomationRPA() throws IOException, InterruptedException, InvalidFormatException {
 
 		_sd.loadURL("http://www.rpachallenge.com/");
-		_sd.waitForFileDownload("challenge.xlsx", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas", _sd.getByXpath("/html/body/div/div/div[1]/div/section[2]/div/a[1]"));
+		if (_sd.isFileDownloaded("challenge.xlsx", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas")==false) {
+			_sd.click(By.xpath("/html/body/div/div/div[1]/div/section[2]/div/a[1]"));
+			_sd.waitForFileDownloaded("challenge.xlsx", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas", 120);	
+		}
 		String[][] data = _sd.fromXLStoArray("C:\\Users\\aconesa\\Downloads\\pruebas-descargas\\challenge.xlsx", 0);
-		_sd.clickByXpath("/html/body/div/div/div[1]/div/section[3]/div/button");		        
+		_sd.click(By.xpath("/html/body/div/div/div[1]/div/section[3]/div/button"));		        
 
 		for (int count=1; count<11;count++) {
-			List<String> cuadros = _sf.mapListOfText(_sd.getByClass("js-randomFormContainer").findElements(By.tagName("label")));
+			List<String> cuadros = _sf.mapListOfText(_sd.getElement(By.className("js-randomFormContainer")).findElements(By.tagName("label")));
 
-			List<WebElement> cajas = _sd.getByClass("js-randomFormContainer").findElements(By.tagName("input")).stream()
+			List<WebElement> cajas = _sd.getElement(By.className("js-randomFormContainer")).findElements(By.tagName("input")).stream()
 					.collect(Collectors.toList());
 
 			for (String titulo:cuadros) {
@@ -199,10 +202,10 @@ public class TestsExample {
 					cajas.get(pos).sendKeys(data[count][2]);
 				}
 			}
-			_sd.getByClass("js-randomFormContainer").findElement(By.className("btn-default")).click();
+			_sd.getElement(By.className("js-randomFormContainer")).findElement(By.className("btn-default")).click();
 		}
 	}
-	*/
+	
 	
 	/*
 	@Test
@@ -221,12 +224,12 @@ public class TestsExample {
 	}
 	*/
 	
-	
+	/*
 	@Test
 	public void prueba(){
-		_sd.loadURL("https://www.pccomponentes.com/?gclid=EAIaIQobChMIoIu-vNjd3QIVjLTtCh3ThggFEAAYASAAEgJ-pfD_BwE");
-		_sd.waitForElementPresenceBy(How.CLASS_NAME, "GTM-productClick");
+		_sd.loadURL("https://www.google.com");
 	}
+	*/
 	
 	@AfterClass
 	public static void testOut(){

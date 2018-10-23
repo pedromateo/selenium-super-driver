@@ -83,7 +83,7 @@ public class GetElementMethods {
 	@Test
 	public void getelement() throws InvalidFormatException, IOException {
 		_sd.loadURL("https://www.google.com/search?q=gatos&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiM-uK8hd3dAhXNZFAKHYFmClUQ_AUICigB&biw=1920&bih=938");
-		WebElement element = _sd.get(How.ID, "9jmGsTj5jIjF-M:");
+		WebElement element = _sd.getElement(By.id("9jmGsTj5jIjF-M:"));
 		_sd.click(element);
 		}
 	*/
@@ -102,7 +102,7 @@ public class GetElementMethods {
 	@Test
 	public void getelementBy() throws InvalidFormatException, IOException {
 		_sd.loadURL("https://www.google.com/search?q=gatos&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiM-uK8hd3dAhXNZFAKHYFmClUQ_AUICigB&biw=1920&bih=938");
-		WebElement element = _sd.getByID("9jmGsTj5jIjF-M:");
+		WebElement element = _sd.getElement(By.id("9jmGsTj5jIjF-M:"));
 		_sd.click(element);
 		}
 	*/

@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.internal.ArrayComparisonFailure;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.support.How;
@@ -39,35 +40,11 @@ public class SuperChecker {
 	 * @param elem
 	 * @return boolean
 	 */
-	public boolean elementPresent (How mode, String elem) {
-		WebElement elemento;
-		switch(mode) {
-		case XPATH:
-			elemento = _sd.getByXpath(elem);
-			break;
-		case ID:
-			elemento = _sd.getByID(elem);
-			break;
-		case TAG_NAME:
-			elemento = _sd.getByTagName(elem);
-			break;
-		case NAME:
-			elemento = _sd.getByName(elem);
-			break;
-		case CSS:
-			elemento = _sd.getByCssSelector(elem);
-			break;
-		case LINK_TEXT:
-			elemento = _sd.getByLinkText(elem);
-			break;
-		case PARTIAL_LINK_TEXT:
-			elemento = _sd.getByPartialLinkText(elem);
-			break;
-		case CLASS_NAME:
-			elemento = _sd.getByClass(elem);
-		}
+	public boolean elementPresent (By selector) {
+		WebElement element = _sd.getElement(selector) ;
+		
 		try {
-			Assert.assertNotNull(elem);
+			Assert.assertNotNull(element);
 			return true;
 		}
 		catch (Exception e) {
@@ -75,85 +52,7 @@ public class SuperChecker {
 		}
 	}
 	
-	/**
-	 * Check the presence of a WebElement by Xpath.
-	 * @param mode
-	 * @param elem
-	 * @return boolean
-	 */
-	public boolean elementPresentByXpath(String elem) {
-		return elementPresent(How.XPATH, elem);
-	}
 	
-	/**
-	 * Check the presence of a WebElement by Id.
-	 * @param mode
-	 * @param elem
-	 * @return boolean
-	 */
-	public boolean elementPresentByID(String elem) {
-		return elementPresent(How.ID, elem);
-	}
-	
-	/**
-	 * Check the presence of a WebElement by TagName.
-	 * @param mode
-	 * @param elem
-	 * @return boolean
-	 */
-	public boolean elementPresentByTagName(String elem) {
-		return elementPresent(How.TAG_NAME, elem);
-	}
-	
-	/**
-	 * Check the presence of a WebElement by Name.
-	 * @param mode
-	 * @param elem
-	 * @return boolean
-	 */
-	public boolean elementPresentByName(String elem) {
-		return elementPresent(How.NAME, elem);
-	}
-	
-	/**
-	 * Check the presence of a WebElement by Css.
-	 * @param mode
-	 * @param elem
-	 * @return boolean
-	 */
-	public boolean elementPresentByCss(String elem) {
-		return elementPresent(How.CSS, elem);
-	}
-	
-	/**
-	 * Check the presence of a WebElement by LinkText.
-	 * @param mode
-	 * @param elem
-	 * @return boolean
-	 */
-	public boolean elementPresentByLinkText(String elem) {
-		return elementPresent(How.LINK_TEXT, elem);
-	}
-	
-	/**
-	 * Check the presence of a WebElement by PartialLinkText.
-	 * @param mode
-	 * @param elem
-	 * @return boolean
-	 */
-	public boolean elementPresentByPartialLinkText(String elem) {
-		return elementPresent(How.PARTIAL_LINK_TEXT, elem);
-	}
-	
-	/**
-	 * Check the presence of a WebElement by Class.
-	 * @param mode
-	 * @param elem
-	 * @return boolean
-	 */
-	public boolean elementPresentByClass(String elem) {
-		return elementPresent(How.CLASS_NAME, elem);
-	}
 	
 	/**
 	 * Gets a screenshot.
@@ -185,7 +84,7 @@ public class SuperChecker {
 			org.junit.Assert.assertTrue(message, condition);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -203,7 +102,7 @@ public class SuperChecker {
 			org.junit.Assert.assertTrue(condition);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -223,7 +122,7 @@ public class SuperChecker {
 			org.junit.Assert.assertFalse(message, condition);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -241,7 +140,7 @@ public class SuperChecker {
 			org.junit.Assert.assertFalse(condition);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -260,7 +159,7 @@ public class SuperChecker {
 			org.junit.Assert.fail(message);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -275,7 +174,7 @@ public class SuperChecker {
 			org.junit.Assert.fail();
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -297,7 +196,7 @@ public class SuperChecker {
 			org.junit.Assert.assertEquals(message, expected, actual);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -318,7 +217,7 @@ public class SuperChecker {
 			org.junit.Assert.assertEquals(expected, actual);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -332,7 +231,7 @@ public class SuperChecker {
 		} catch (AssertionError err) {
 			try{
 
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -353,7 +252,7 @@ public class SuperChecker {
 		} catch (AssertionError err) {
 			try{
 
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -366,7 +265,7 @@ public class SuperChecker {
 		} catch (AssertionError err) {
 			try{
 
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -379,7 +278,7 @@ public class SuperChecker {
 		} catch (AssertionError err) {
 			try{
 
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -391,7 +290,7 @@ public class SuperChecker {
 			org.junit.Assert.assertNull(message, object);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -403,7 +302,7 @@ public class SuperChecker {
 			org.junit.Assert.assertNull(object);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -415,7 +314,7 @@ public class SuperChecker {
 			org.junit.Assert.assertSame(message, expected, actual);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -427,7 +326,7 @@ public class SuperChecker {
 			org.junit.Assert.assertSame(expected, actual);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -439,7 +338,7 @@ public class SuperChecker {
 			org.junit.Assert.assertNotSame(message, unexpected, actual);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}
@@ -451,7 +350,7 @@ public class SuperChecker {
 			org.junit.Assert.assertNotSame(unexpected, actual);
 		} catch (AssertionError err) {
 			try{
-				_sd.takeScreenshot("/superdriver/AssertScreenshots");
+				SuperDriver.captureScreenshot();
 			} finally {
 				throw err;
 			}

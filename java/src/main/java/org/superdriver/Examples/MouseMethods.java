@@ -89,7 +89,7 @@ public class MouseMethods {
 		_sd.waitTime(3000);
 		_sd.scrollUpByPixel(500);
 		_sd.waitTime(3000);
-		_sd.scrollToElement(_sd.getByXpath("//*[@id=\"rg_s\"]/div[56]/a/img"));
+		_sd.scrollToElement(_sd.getElement(By.xpath("//*[@id=\"rg_s\"]/div[56]/a/img")));
 		_sd.waitTime(3000);
 	}
 	*/
@@ -98,7 +98,7 @@ public class MouseMethods {
 	@Test
 	public void hover(){
 		_sd.loadURL("https://www.google.es/");
-		_sd.hover(How.ID, "gsri_ok0");
+		_sd.hover(By.id("gsri_ok0"));
 	}
 	*/
 	
@@ -108,8 +108,8 @@ public class MouseMethods {
 		System.out.println("Starting test " + new Object(){}.getClass().getEnclosingMethod().getName());
 		_sd.loadURL("http://code.makery.ch/library/dart-drag-and-drop/");
 		while(true) {
-		_sd.dragAndDrop(How.ID, "draggable-a", "dropzone-1");
-		_sd.dragAndDrop(How.ID, "draggable-b", "dropzone-2");
+		_sd.dragAndDrop(By.id("draggable-a"), By.id("dropzone-1"));
+		_sd.dragAndDrop(By.id("draggable-b"), By.id("dropzone-2"));
 		}
 	}
 	*/

@@ -1,12 +1,18 @@
 package org.superdriver.Examples;
 
+import java.io.IOException;
 import java.util.HashMap;
+
+import javax.management.AttributeNotFoundException;
+
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.superdriver.SuperChecker;
 import org.superdriver.SuperDriver;
 import org.superdriver.SuperFilter;
+import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -61,7 +67,7 @@ public class DownloadMethods {
 	@Test
 	public void Download() throws InterruptedException, AttributeNotFoundException, IOException{
 		_sd.loadURL("https://www.thinkbroadband.com/download");
-		_sd.click(_sd.getByXpath("//*[@id='main-col']/div/div/div[8]/p[1]/a/img"));
+		_sd.click(_sd.getElement(By.xpath("//*[@id='main-col']/div/div/div[8]/p[1]/a/img")));
 		_sd.enableLog();
 		_sd.waitForFileDownloaded("5MB.zip", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas");
 		}
@@ -71,7 +77,7 @@ public class DownloadMethods {
 	@Test
 	public void Downloadfail() throws InterruptedException, AttributeNotFoundException, IOException{
 		_sd.loadURL("https://www.thinkbroadband.com/download");
-		_sd.click(_sd.getByXpath("//*[@id=\'main-col\']/div/div/div[1]/p[1]/a/img"));
+		_sd.click(_sd.getElement(By.xpath("//*[@id=\'main-col\']/div/div/div[1]/p[1]/a/img")));
 		_sd.enableLog();
 		_sd.waitForFileDownloaded("1GB.zip", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas", 10);
 	}

@@ -88,7 +88,7 @@ public class AssertMethods {
 	@Test
 	public void assertTrue() throws InterruptedException, AttributeNotFoundException{
 		_sd.loadURL("https://www.google.es/");
-		_sc.assertTrue(_sc.elementPresentByID("lst-ib"));
+		_sc.assertTrue(_sc.elementPresent(By.id("lst-ib")));
 	}
 	*/
 	
@@ -102,7 +102,7 @@ public class AssertMethods {
 				.map(a -> a.getAttribute("title").toString())
 				.collect(Collectors.toList());
 		
-		List<String> ListSD = _sf.mapListOfAttributes(_sf.ByAttribute("id", "GTM").applyFilter(_sd.getByID("main-menu").findElements(By.tagName("a"))), "title");
+		List<String> ListSD = _sf.mapListOfAttributes(_sf.ByAttribute("id", "GTM").applyFilter(_sd.getElement(By.id("main-menu")).findElements(By.tagName("a"))), "title");
 		_sf.clearFilter();
 		_sc.assertEquals(ListD, ListSD);
 	}
@@ -112,8 +112,8 @@ public class AssertMethods {
 	@Test
 	public void assertFalse() throws InterruptedException, AttributeNotFoundException{
 		_sd.loadURL("https://www.google.es/");
-		System.out.print(_sd.getByXpath("//*[@id=\"tsf\"]/div[2]/div[3]/center/input[1]").getAttribute("value"));
-		_sc.assertFalse(_sd.getByXpath("//*[@id=\"tsf\"]/div[2]/div[3]/center/input[1]").getAttribute("value").contains("Hola"));
+		System.out.print(_sd.getElement(By.xpath("//*[@id=\"tsf\"]/div[2]/div[3]/center/input[1]")).getAttribute("value"));
+		_sc.assertFalse(_sd.getElement(By.xpath("//*[@id=\"tsf\"]/div[2]/div[3]/center/input[1]")).getAttribute("value").contains("Hola"));
 	}
 	*/
 	

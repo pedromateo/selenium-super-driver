@@ -1,5 +1,7 @@
 package org.superdriver;
 
+import static org.junit.Assert.fail;
+
 import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -9,13 +11,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.management.AttributeNotFoundException;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -23,6 +29,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -36,10 +43,13 @@ import org.openqa.selenium.By.ByPartialLinkText;
 import org.openqa.selenium.By.ByTagName;
 import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NotFoundException;
-import org.openqa.selenium.Point;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -62,7 +72,7 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 public class SuperDriver {
 	
 	private RemoteWebDriver _driver;
-	private static final int WAIT_TIMEOUT = 10;
+	private static final int WAIT_TIMEOUT = 60;
 	
 	/**
 	 * Builder that receives the driver as an argument and creates a SuperDriver type object.
@@ -105,11 +115,19 @@ public class SuperDriver {
 	///
 	
 	/**
-	 * Load a URL in the browser.
+	 * Load a URL in the browser by .get function.
 	 * @param String url
 	 */
 	public void loadURL(String url) {
 		_driver.get(url);	
+	}
+	
+	/**
+	 * Load a URL in the browser by .navigate().to() function.
+	 * @param url
+	 */
+	public void navigateURL(String url) {
+		_driver.navigate().to(url);
 	}
 
 	
@@ -123,7 +141,7 @@ public class SuperDriver {
 	 * @param key
 	 * @throws NoSuchElementException
 	 */
-	public void waitForElementPresenceBy(How mode, String key) throws NoSuchElementException{
+	public void waitElementPresenceBy(How mode, String key) throws NoSuchElementException{
 		try {
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			switch(mode) {
@@ -162,14 +180,14 @@ public class SuperDriver {
 	 * @param key
 	 * @throws ElementNotVisibleException
 	 */
-	public void waitForElementVisibilityBy(How mode, String key) throws ElementNotVisibleException{
+	public void waitElementVisibilityBy(By selector) throws ElementNotVisibleException{
 		try {
 			WebElement elemento;
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
-			elemento = get(mode, key);
+			elemento = getElement(selector);
 			wait.until(ExpectedConditions.visibilityOf(elemento));
 		}catch(Exception e) {e.printStackTrace();
-		throw new  ElementNotVisibleException("Element "+key+" is not visible" );
+		throw new  ElementNotVisibleException("Element "+ selector.toString() +" is not visible" );
 		}
 	}
 	
@@ -178,7 +196,7 @@ public class SuperDriver {
 	 * @param Webelement
 	 * @throws ElementNotVisibleException
 	 */
-	public void waitForElementVisibility(WebElement elemento)throws ElementNotVisibleException{
+	public void waitElementVisibility(WebElement elemento)throws ElementNotVisibleException{
 		try {
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.visibilityOf(elemento));
@@ -192,7 +210,7 @@ public class SuperDriver {
 	 * @param Int Time in ms
 	 * @throws TimeoutException
 	 */
-	public void waitTime(int time)throws TimeoutException{
+	public static void waitTime(int time)throws TimeoutException{
 		try {
 			TimeUnit.MILLISECONDS.sleep(time);
 		}catch (Exception e){e.printStackTrace();
@@ -200,6 +218,16 @@ public class SuperDriver {
 		}
 	}
 	
+	  public void waitElementToBeClickable(WebElement element) {
+	        try {
+	            WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+	            wait.until(ExpectedConditions.elementToBeClickable(element));
+	        } catch (NoSuchElementException e) {
+	            fail("Element "+element+" is not present");
+	        } catch (Exception e) {
+	            fail("Wait for the element "+element+" is not working");
+	        }
+	    }
 	
 	///
 	/// Wait and get
@@ -211,7 +239,7 @@ public class SuperDriver {
 	 */
 	public String getTitle() {
 		String title;
-		waitForElementPresenceBy(How.TAG_NAME, "title");
+		waitElementPresenceBy(How.TAG_NAME, "title");
 		title = _driver.getTitle();
 		return title;
 	}
@@ -241,9 +269,9 @@ public class SuperDriver {
 	 * @returnString Attribute
 	 * @throws AttributeNotFoundException
 	 */
-	public String getAttribute(How mode, String key, String Attribute) throws AttributeNotFoundException {
+	public String getAttribute(By selector, String Attribute) throws AttributeNotFoundException {
 		try {
-			WebElement element = get(mode,key);
+			WebElement element = getElement(selector);
 			String att = null;
 			att = element.getAttribute(Attribute);
 			if (att == null) {
@@ -262,7 +290,7 @@ public class SuperDriver {
 	 * @return WebElement
 	 * @throws NotFoundException
 	 */
-	private WebElement get(By how) throws NotFoundException {
+	public WebElement getElement(By how) throws NotFoundException {
 		try {
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.presenceOfElementLocated(how)); 
@@ -277,6 +305,8 @@ public class SuperDriver {
 		}
 	}
 	
+
+	
 	/**
 	 * Get a WebElement
 	 * @param How mode
@@ -284,7 +314,7 @@ public class SuperDriver {
 	 * @return WebElement
 	 * @throws NotFoundException
 	 */
-	public WebElement get(How mode, String key)  throws NotFoundException {
+	/*public WebElement get(How mode, String key)  throws NotFoundException {
 		try {
 			switch(mode) {
 			case XPATH:
@@ -309,106 +339,106 @@ public class SuperDriver {
 		} catch (Exception e) {e.printStackTrace();
 		throw new NotFoundException("Element " + key + " not found");
 		}
-	}
+	}*/
 	
 	/**
 	 * Get a WebElement by Xpath locator.
 	 * @param key
 	 * @return WebElement
 	 */
-	public WebElement getByXpath(String key) {
+	/*public WebElement getByXpath(String key) {
 		ByXPath objetoBusqueda = new ByXPath(key);
 		return get(objetoBusqueda);
-	}
+	}*/
 	
 	/**
 	 * Get a WebElement by Id locator.
 	 * @param key
 	 * @return WebElement
 	 */
-	public WebElement getByID(String key) {
+	/*public WebElement getByID(String key) {
 		ById objetoBusqueda = new ById(key);
 		return get(objetoBusqueda);
-	}
+	}*/
 	
 	/**
 	 * Get a WebElement by Name locator.
 	 * @param key
 	 * @return WebElement
 	 */
-	public WebElement getByName(String key) {
+	/*public WebElement getByName(String key) {
 		ByName objetoBusqueda = new ByName(key);
 		return get(objetoBusqueda);
-	}
+	}*/
 	
 	/**
 	 * Get a WebElement by CssSelector locator.
 	 * @param key
 	 * @return WebElement
 	 */
-	public WebElement getByCssSelector(String key) {
+	/*public WebElement getByCssSelector(String key) {
 		ByCssSelector objetoBusqueda = new ByCssSelector(key);
 		return get(objetoBusqueda);
-	}
+	}*/
 	
 	/**
 	 * Get a WebElement by LinkText locator.
 	 * @param key
 	 * @return WebElement
 	 */
-	public WebElement getByLinkText(String key) {
+	/*public WebElement getByLinkText(String key) {
 		ByLinkText objetoBusqueda = new ByLinkText(key);
 		return get(objetoBusqueda);
-	}
+	}*/
 	
 	/**
 	 * Get a WebElement by PartialLinkText locator.
 	 * @param key
 	 * @return WebElement
 	 */
-	public WebElement getByPartialLinkText(String key) {
+	/*public WebElement getByPartialLinkText(String key) {
 		ByPartialLinkText objetoBusqueda = new ByPartialLinkText(key);
 		return get(objetoBusqueda);
-	}
+	}*/
 	
 	/**
 	 * Get a WebElement by TagName locator.
 	 * @param key
 	 * @return WebElement
 	 */
-	public WebElement getByTagName(String key) {
+	/*public WebElement getByTagName(String key) {
 		ByTagName objetoBusqueda = new ByTagName(key);
 		return get(objetoBusqueda);
-	}
+	}*/
 	
 	/**
 	 * Get a WebElement by Class locator.
 	 * @param key
 	 * @return WebElement
 	 */
-	public WebElement getByClass(String key) {
+	/*public WebElement getByClass(String key) {
 		ByClassName objetoBusqueda = new ByClassName(key);
 		return get(objetoBusqueda);
-	}
+	}*/
 	
 	/**
 	 * Using the driver methods, searches for an List<WebElements>.
-	 * @param how
+	 * @param selector
 	 * @return
 	 * @throws NotFoundException
 	 */
-	private List<WebElement> getListOfElements(By how) throws NotFoundException {
+	private List<WebElement> getListOfElements(By selector) throws NotFoundException {
 		try { 
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
-			wait.until(ExpectedConditions.presenceOfElementLocated(how)); 
+			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
 			List <WebElement> lista = null;
-			lista = _driver.findElements(how);
+			lista = _driver.findElements(selector);
 			if (lista == null)
-				throw new NotFoundException(how.toString());
+				throw new NotFoundException(selector.toString());
 			else 
 				return lista;
 		} catch (Exception e) {e.printStackTrace();
-		throw new NotFoundException("Element not found " + how.toString());
+		throw new NotFoundException("Element not found " + selector.toString());
 		}
 	}
 	
@@ -530,7 +560,6 @@ public class SuperDriver {
 	///
 	/// Wait and Click
 	///
-	
 	/**
 	 * Simulates a click on a WebElement.
 	 * @param elemento
@@ -551,48 +580,19 @@ public class SuperDriver {
 	 * @param key
 	 * @throws NotFoundException
 	 */
-	public void click(How mode, String key)throws NotFoundException {
+	public void click(By selector)throws NotFoundException {
 		WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT); 
-		WebElement elemento =wait.until(ExpectedConditions.elementToBeClickable(get(mode,key)));
+		WebElement elemento = wait.until(ExpectedConditions.elementToBeClickable(getElement(selector)));
 		if (elemento != null) {
 			click(elemento);
 		}
 		else {throw new NoSuchElementException("WebElement not found.");}
 	}
 	
-	public void clickByXpath(String key) {
-		click(How.XPATH, key);
-	}
-	
-	public void clickByID(String key) {
-		click(How.ID, key);
-	}
-	
-	public void clickByTagName(String key) {
-		click(How.TAG_NAME, key);
-	}
-	
-	public void clickByName(String key) {
-		click(How.NAME, key);
-	}
-	
-	public void clickByCssSelector(String key) {
-		click(How.CSS, key);
-	}
-	
-	public void clickByLinkText(String key) {
-		click(How.LINK_TEXT, key);
-	}
-	
-	public void clickByPartialLinkText(String key) {
-		click(How.PARTIAL_LINK_TEXT, key);
-	}
-
 	
 	///
 	/// Wait and Select option
 	///
-	
 	/// By index
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
@@ -600,8 +600,8 @@ public class SuperDriver {
 	 * @param key
 	 * @param option 
 	 */
-	public void selectOptionByIndex(How mode, String key, int option) {
-		WebElement elemento = get(mode,key);
+	public void selectOptionByIndex(By selector, int option) {
+		WebElement elemento = getElement(selector);
 		selectOptionByIndex(elemento, option);
 	}
 	
@@ -611,41 +611,9 @@ public class SuperDriver {
 	 * @param option 
 	 */
 	public void selectOptionByIndex(WebElement elemento, int option) {
-		waitForElementVisibility(elemento);
+		waitElementVisibility(elemento);
 		Select sel = new Select(elemento);
 		sel.selectByIndex(option);
-	}
-	
-	public void selectOptionByXpathByIndex(String key, int option) {
-		selectOptionByIndex(How.XPATH, key, option);
-	}
-	
-	public void selectOptionByIDByIndex(String key, int option) {
-		selectOptionByIndex(How.ID, key, option);
-	}
-	
-	public void selectOptionByTagNameByIndex(String key, int option) {
-		selectOptionByIndex(How.TAG_NAME, key, option);
-	}
-	
-	public void selectOptionByNameByIndex(String key, int option) {
-		selectOptionByIndex(How.NAME, key, option);
-	}
-	
-	public void selectOptionCssSelectorByIndex(String key, int option) {
-		selectOptionByIndex(How.CSS, key, option);
-	}
-	
-	public void selectOptionLinkTextByIndex(String key, int option) {
-		selectOptionByIndex(How.LINK_TEXT, key, option);
-	}
-	
-	public void selectOptionPartialLinkTextByIndex(String key, int option) {
-		selectOptionByIndex(How.PARTIAL_LINK_TEXT, key, option);
-	}
-	
-	public void selectOptionByClassByIndex(String key, int option) {
-		selectOptionByIndex(How.CLASS_NAME, key, option);
 	}
 	
 	///By VisibleText
@@ -655,8 +623,8 @@ public class SuperDriver {
 	 * @param key
 	 * @param option 
 	 */
-	public void selectOptionByVisibleText(How mode, String key, String option) {
-		WebElement elemento = get(mode,key);
+	public void selectOptionByVisibleText(By selector, String option) {
+		WebElement elemento = getElement(selector);
 		selectOptionByVisibleText(elemento, option);
 	}
 	
@@ -666,40 +634,9 @@ public class SuperDriver {
 	 * @param option 
 	 */
 	public void selectOptionByVisibleText(WebElement elemento, String option) {
-		waitForElementVisibility(elemento);
+		waitElementVisibility(elemento);
 		Select sel = new Select(elemento);
 		sel.selectByVisibleText(option);
-	}
-	
-	public void selectOptionByXpathByVisibleText(String key, String option) {
-		selectOptionByVisibleText(How.XPATH, key, option);
-	}
-	public void selectOptionByIDByVisibleText(String key, String option) {
-		selectOptionByVisibleText(How.ID, key, option);
-	}
-	
-	public void selectOptionByTagNameByVisibleText(String key, String option) {
-		selectOptionByVisibleText(How.TAG_NAME, key, option);
-	}
-	
-	public void selectOptionByNameByVisibleText(String key, String option) {
-		selectOptionByVisibleText(How.NAME, key, option);
-	}
-	
-	public void selectOptionCssSelectorByVisibleText(String key, String option) {
-		selectOptionByVisibleText(How.CSS, key, option);
-	}
-	
-	public void selectOptionLinkTextByVisibleText(String key, String option) {
-		selectOptionByVisibleText(How.LINK_TEXT, key, option);
-	}
-	
-	public void selectOptionPartialLinkTextByVisibleText(String key, String option) {
-		selectOptionByVisibleText(How.PARTIAL_LINK_TEXT, key, option);
-	}
-	
-	public void selectOptionByClassByVisibleText(String key, String option) {
-		selectOptionByVisibleText(How.CLASS_NAME, key, option);
 	}
 	
 	///By Value
@@ -709,8 +646,8 @@ public class SuperDriver {
 	 * @param key
 	 * @param option 
 	 */
-	public void selectOptionByValue(How mode, String key, String option) {
-		WebElement elemento = get(mode,key);
+	public void selectOptionByValue(By selector, String option) {
+		WebElement elemento = getElement(selector);
 		selectOptionByValue(elemento, option);
 	}
 	
@@ -719,47 +656,28 @@ public class SuperDriver {
 	 * @param Elemento
 	 * @param option 
 	 */
-	public void selectOptionByValue(WebElement elemento, String option) {
-		waitForElementVisibility(elemento);
-		Select sel = new Select(elemento);
+	public void selectOptionByValue(WebElement element, String option) {
+		waitElementVisibility(element);
+		Select sel = new Select(element);
 		sel.selectByValue(option);
 	}
 	
-	public void selectOptionByXpathByValue(String key, String option) {
-		selectOptionByValue(How.XPATH, key, option);
-	}
-	
-	public void selectOptionByIDByValue(String key, String option) {
-		selectOptionByValue(How.ID, key, option);
-	}
-	
-	public void selectOptionByTagNameByValue(String key, String option) {
-		selectOptionByValue(How.TAG_NAME, key, option);
-	}
-	
-	public void selectOptionByNameByValue(String key, String option) {
-		selectOptionByValue(How.NAME, key, option);
-	}
-	
-	public void selectOptionCssSelectorByValue(String key, String option) {
-		selectOptionByValue(How.CSS, key, option);
-	}
-	
-	public void selectOptionLinkTextByValue(String key, String option) {
-		selectOptionByValue(How.LINK_TEXT, key, option);
-	}
-	
-	public void selectOptionPartialLinkTextByValue(String key, String option) {
-		selectOptionByValue(How.PARTIAL_LINK_TEXT, key, option);
-	}
-	
-	public void selectOptionByClassByValue(String key, String option) {
-		selectOptionByValue(How.CLASS_NAME, key, option);
-	}
-	
+	/// Check if a element is selected
+    public String selectGetFirstSelectedOption(WebElement element) {
+        String strFirstSelectedOption = null;
+        try {
+            Select sel = new Select(element);
+            strFirstSelectedOption = sel.getFirstSelectedOption().getText();
+        } catch (NoSuchElementException e) {
+            fail("Select element is not present");
+        } catch (Exception e) {
+            fail("Could not find any selected option");
+        }
+        return strFirstSelectedOption;
+    }
 
 	///
-	/// check if is selected and deSelect option
+	///deSelect option
 	///
 	
 	/// Deselect By index
@@ -769,8 +687,8 @@ public class SuperDriver {
 	 * @param key
 	 * @param option 
 	 */
-	public void deSelectOptionByIndex(How mode, String key, int option) {
-		WebElement elemento = get(mode,key);
+	public void deSelectOptionByIndex(By selector, int option) {
+		WebElement elemento = getElement(selector);
 		deSelectOptionByIndex(elemento, option);
 	}
 	
@@ -780,42 +698,11 @@ public class SuperDriver {
 	 * @param option
 	 */
 	public void deSelectOptionByIndex(WebElement elemento, int option) {
-		waitForElementVisibility(elemento);
+		waitElementVisibility(elemento);
 		Select sel = new Select(elemento);
 		sel.deselectByIndex(option);
 	}
 	
-	public void deSelectOptionByXpathByIndex(String key, int option) {
-		deSelectOptionByIndex(How.XPATH, key, option);
-	}
-	
-	public void deSelectOptionByIDByIndex(String key, int option) {
-		deSelectOptionByIndex(How.ID, key, option);
-	}
-	
-	public void deSelectOptionByTagNameByIndex(String key, int option) {
-		deSelectOptionByIndex(How.TAG_NAME, key, option);
-	}
-	
-	public void deSelectOptionByNameByIndex(String key, int option) {
-		deSelectOptionByIndex(How.NAME, key, option);
-	}
-	
-	public void deSelectOptionByCssSelectorByIndex(String key, int option) {
-		deSelectOptionByIndex(How.CSS, key, option);
-	}
-	
-	public void deSelectOptionByLinkTextByIndex(String key, int option) {
-		deSelectOptionByIndex(How.LINK_TEXT, key, option);
-	}
-	
-	public void deSelectOptionByPartialLinkTextByIndex(String key, int option) {
-		deSelectOptionByIndex(How.PARTIAL_LINK_TEXT, key, option);
-	}
-	
-	public void deSelectOptionByClassByIndex(String key, int option) {
-		deSelectOptionByIndex(How.CLASS_NAME, key, option);
-	}
 	
 	///Deselect By VisibleText
 	/**
@@ -824,8 +711,8 @@ public class SuperDriver {
 	 * @param key
 	 * @param option
 	 */
-	public void deSelectOptionByVisibleText(How mode, String key, String option) {
-		WebElement elemento = get(mode,key);
+	public void deSelectOptionByVisibleText(By selector, String option) {
+		WebElement elemento = getElement(selector);
 		deSelectOptionByVisibleText(elemento, option);
 	}
 	
@@ -835,43 +722,12 @@ public class SuperDriver {
 	 * @param option
 	 */
 	public void deSelectOptionByVisibleText(WebElement elemento, String option) {
-		waitForElementVisibility(elemento);
+		waitElementVisibility(elemento);
 		Select sel;
 		sel = new Select(elemento);
 		sel.deselectByVisibleText(option);
 	}
 	
-	public void deSelectOptionByXpathByVisibleText(String key, String option) {
-		deSelectOptionByVisibleText(How.XPATH, key, option);
-	}
-	
-	public void deSelectOptionByIDByVisibleText(String key, String option) {
-		deSelectOptionByVisibleText(How.ID, key, option);
-	}
-	
-	public void deSelectOptionByTagNameByVisibleText(String key, String option) {
-		deSelectOptionByVisibleText(How.TAG_NAME, key, option);
-	}
-	
-	public void deSelectOptionByNameByVisibleText(String key, String option) {
-		deSelectOptionByVisibleText(How.NAME, key, option);
-	}
-	
-	public void deSelectOptionCssSelectorByVisibleText(String key, String option) {
-		deSelectOptionByVisibleText(How.CSS, key, option);
-	}
-	
-	public void deSelectOptionLinkTextByVisibleText(String key, String option) {
-		deSelectOptionByVisibleText(How.LINK_TEXT, key, option);
-	}
-	
-	public void deSelectOptionPartialLinkTextByVisibleText(String key, String option) {
-		deSelectOptionByVisibleText(How.PARTIAL_LINK_TEXT, key, option);
-	}
-	
-	public void deSelectOptionByClassByVisibleText(String key, String option) {
-		deSelectOptionByVisibleText(How.CLASS_NAME, key, option);
-	}
 	
 	///Deselect By Value
 	/**
@@ -880,8 +736,8 @@ public class SuperDriver {
 	 * @param key
 	 * @param option
 	 */
-	public void deSelectOptionByValue(How mode, String key, String option) {
-		WebElement elemento = get(mode,key);
+	public void deSelectOptionByValue(By selector, String option) {
+		WebElement elemento = getElement(selector);
 		deSelectOptionByValue(elemento, option);
 	}
 	
@@ -891,41 +747,9 @@ public class SuperDriver {
 	 * @param option
 	 */
 	public void deSelectOptionByValue(WebElement elemento, String option) {
-		waitForElementVisibility(elemento);
+		waitElementVisibility(elemento);
 		Select sel = new Select(elemento);
 		sel.deselectByValue(option);
-	}
-	
-	public void deSelectOptionByXpathByValue(String key, String option) {
-		deSelectOptionByValue(How.XPATH, key, option);
-	}
-	
-	public void deSelectOptionByIDByValue(String key, String option) {
-		deSelectOptionByValue(How.ID, key, option);
-	}
-	
-	public void deSelectOptionByTagNameByValue(String key, String option) {
-		deSelectOptionByValue(How.TAG_NAME, key, option);
-	}
-	
-	public void deSelectOptionByNameByValue(String key, String option) {
-		deSelectOptionByValue(How.NAME, key, option);
-	}
-	
-	public void deSelectOptionCssSelectorByValue(String key, String option) {
-		deSelectOptionByValue(How.CSS, key, option);
-	}
-	
-	public void deSelectOptionLinkTextByValue(String key, String option) {
-		deSelectOptionByValue(How.LINK_TEXT, key, option);
-	}
-	
-	public void deSelectOptionPartialLinkTextByValue(String key, String option) {
-		deSelectOptionByValue(How.PARTIAL_LINK_TEXT, key, option);
-	}
-	
-	public void deSelectOptionByClassByValue(String key, String option) {
-		deSelectOptionByValue(How.CLASS_NAME, key, option);
 	}
 	
 	///deselect all
@@ -934,8 +758,8 @@ public class SuperDriver {
 	 * @param mode
 	 * @param key
 	 */
-	public void deSelectAllOptions(How mode, String key) {
-		WebElement elemento = get(mode,key);
+	public void deSelectAllOptions(By selector) {
+		WebElement elemento = getElement(selector);
 		deSelectAllOptions(elemento);
 	}
 	
@@ -944,7 +768,7 @@ public class SuperDriver {
 	 * @param elemento
 	 */
 	public void deSelectAllOptions(WebElement elemento) {
-		waitForElementVisibility(elemento);
+		waitElementVisibility(elemento);
 		Select sel = new Select(elemento);
 		sel.deselectAll();
 	}
@@ -954,14 +778,24 @@ public class SuperDriver {
 	/// wait and send keys
 	///
 	
+    public void textboxClear(WebElement element) {
+        try {
+            waitElementToBeClickable(element);
+            element.clear();
+        } catch (java.util.NoSuchElementException e) {
+            fail("Textbox element is not present");
+        } catch (Exception e) {
+            fail("Textbox text can not be cleared");
+        }
+    }
 	/**
 	 * Write in a Text box.
 	 * @param How mode
 	 * @param String key
 	 * @param String sendKey
 	 */
-	public void sendKeys(How mode, String key, String sendKey) {
-		WebElement elemento = get(mode,key);
+	public void sendKeys(By selector, String sendKey) {
+		WebElement elemento = getElement(selector);
 		sendKeys(elemento, sendKey);
 	}
 	
@@ -976,38 +810,6 @@ public class SuperDriver {
 		}
 		else {throw new NoSuchElementException("Element not found.");
 		}
-	}
-	
-	public void sendKeysByID(String elem, String sendKey) {
-		sendKeys(How.ID, elem, sendKey);
-	}
-	
-	public void sendKeysByXpath(String elem, String sendKey) {
-		sendKeys(How.XPATH, elem, sendKey);
-	}
-	
-	public void sendKeysByTagName(String elem, String sendKey) {
-		sendKeys(How.TAG_NAME, elem, sendKey);
-	}
-	
-	public void sendKeysByName(String elem, String sendKey) {
-		sendKeys(How.NAME, elem, sendKey);
-	}
-	
-	public void sendKeysByCssSelector(String elem, String sendKey) {
-		sendKeys(How.CSS, elem, sendKey);
-	}
-	
-	public void sendKeysByLinkText(String elem, String sendKey) {
-		sendKeys(How.LINK_TEXT, elem, sendKey);
-	}
-	
-	public void sendKeysByPartialLinkText(String elem, String sendKey) {
-		sendKeys(How.PARTIAL_LINK_TEXT, elem, sendKey);
-	}
-	
-	public void sendKeysByClass(String elem, String sendKey) {
-		sendKeys(How.CLASS_NAME, elem, sendKey);
 	}
 
 	
@@ -1104,7 +906,14 @@ public class SuperDriver {
 	///
 	/// Mouse Movement Methods
 	///
-	public void dragAndDrop(How mode, String source, String target) {
+	/**
+	 * Drag an element and drop it in other location
+	 * @param modesource
+	 * @param source
+	 * @param modetarget
+	 * @param target
+	 */
+	public void dragAndDrop(By selectorsource, By selectortarget) {
 		WebElement _source = null, _target = null;
 		Actions builder = new Actions(_driver);
 		builder.keyDown(Keys.CONTROL)
@@ -1112,15 +921,15 @@ public class SuperDriver {
 		.click(_target)
 		.keyUp(Keys.CONTROL);
 		Action dragAndDrop = builder.build();
-		_source = get(mode, source);
-		_target = get(mode, target);
+		_source = getElement(selectorsource);
+		_target = getElement(selectortarget);
 		dragAndDrop.perform();
 	}
 	
-	public void MoveTo(How mode, String where) {
+	public void moveViewToElement(By selector) {
 		WebElement _where;
 		Actions builder = new Actions(_driver);
-		_where = get(mode, where);
+		_where = getElement(selector);
 		builder.moveToElement(_where).perform();
 	}
 	
@@ -1143,7 +952,96 @@ public class SuperDriver {
     	JavascriptExecutor js = (JavascriptExecutor) _driver;	
     	js.executeScript("window.scrollBy(0,"+pixelnum+")");
     }
-	
+    
+    public static String dateGetCurrentDate() {
+        String strCurrentTime = null;
+        try {
+            Date date = new Date();
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm:ss");
+            strCurrentTime = dateFormat.format(date);
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        return strCurrentTime;
+    }
+	///
+    ///Alerts
+    ///
+    public String alertGetText() {
+        String strValue = null;
+        try {
+            waitAlertIsPresent();
+            Alert alt = _driver.switchTo().alert();
+            strValue = alt.getText();
+        } catch (NoAlertPresentException e) {
+            fail("Alert is not present");
+        } catch (Exception e) {
+            fail("Alert pop-up text could not be retrieved");
+        }
+        return strValue;
+    }
+
+    public void alertDismiss() {
+        try {
+            waitAlertIsPresent();
+            Alert alt = _driver.switchTo().alert();
+            alt.dismiss();
+        } catch (NoAlertPresentException e) {
+            fail("Alert is not present");
+        } catch (Exception e) {
+            fail("Alert can not be dismissed");
+        }
+    }
+    
+    public void alertAccept() {
+        try {
+            waitAlertIsPresent();
+            Alert alt = _driver.switchTo().alert();
+            alt.accept();
+        } catch (NoAlertPresentException e) {
+            fail("Alert is not present");
+        } catch (Exception e) {
+            fail("Alert can not be accepted");
+        }
+    }
+
+    public boolean isAlertPresent() {
+    	waitAlertIsPresent();
+        boolean blnValue = false;
+        try{
+            _driver.switchTo().alert();
+            blnValue =  true;
+        }catch (NoAlertPresentException e) {
+            blnValue =  false;
+        }
+        return blnValue;
+    }
+    
+    private void waitAlertIsPresent() {
+        try {
+            WebDriverWait wait = new WebDriverWait(_driver, 20);
+            wait.until(ExpectedConditions.alertIsPresent());
+        } catch (Exception e) {
+        	_log("Wait for the element is not working");
+        }
+    }
+    
+    
+    ///
+    ///Highlight
+    ///
+    public void highlightLocator(WebElement locator){
+        try{
+            JavascriptExecutor js = (JavascriptExecutor) _driver;
+            js.executeScript("arguments[0].style.border='3px solid red'",locator);
+        }catch(NoSuchElementException e){
+            fail("The webelement to be highlighted is not present");
+        }catch (Exception e){
+            fail("Highlighting can not be performmed");
+        }
+    }
+    
     
 	///
 	/// Wait and hover
@@ -1153,10 +1051,19 @@ public class SuperDriver {
 	 * @param mode
 	 * @param key
 	 */
-	public void hover(How mode, String key) {
+	public void hover(By selector) {
 		WebElement elemento;
 		Actions action = new Actions(_driver);
-		elemento = get(mode, key);
+		elemento = getElement(selector);
+		action.moveToElement(elemento).build().perform();
+	}
+	
+	/**
+	 * Simulates the Overpass of the mouse over a element.
+	 * @param elemento
+	 */
+	public void hover(WebElement elemento) {
+		Actions action = new Actions(_driver);
 		action.moveToElement(elemento).build().perform();
 	}
 	
@@ -1166,7 +1073,13 @@ public class SuperDriver {
 	public void closeBrowser() {
 		_driver.close();
 	}
-
+	
+	/**
+	 * Quit the Browser
+	 */
+	public void quitBrowser() {
+		_driver.quit();
+	}
 	
 	///
 	/// Download methods
@@ -1180,7 +1093,7 @@ public class SuperDriver {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public void waitForFileDownloaded(String filename, String directory, int timemax) throws IOException, InterruptedException { 
+	public void waitForFileDownloaded(String filename, String directory, int timemaxsec) throws IOException, InterruptedException { 
 		boolean check = false;
 		int timer = 0;
 		if (isFileDownloaded(filename, directory) == false) {
@@ -1193,8 +1106,8 @@ public class SuperDriver {
 					Thread.sleep(1000);
 					timer = timer + 1;
 				}
-			}while((check == false) && (timer <= timemax));
-			if ((timer == timemax) || (check != true)) {
+			}while((check == false) && (timer <= timemaxsec));
+			if ((timer == timemaxsec) || (check != true)) {
 				_log("File: "+ filename+" is not Downloaded "+ directory);
 				throw new FileNotFoundException();
 				}
@@ -1381,29 +1294,29 @@ public class SuperDriver {
 	///
 	/// Screenshot method
 	///
-	
-	/**
-	 * Takes a Screenshot of the open Tab
-	 * @throws Exception
-	 */
-	public void takeScreenshot(String path) throws Exception, FileNotFoundException{
-			File dir = new File(path);
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd hh mm ss a");
-			Calendar now = Calendar.getInstance();
-			Robot robot = new Robot();
-			BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-			if (dir.exists()) {
-				ImageIO.write(screenShot, "JPG", new File(dir+ "\\" +formatter.format(now.getTime())+".jpg"));
-				_log("Screenshot: " + dir + "\\" + formatter.format(now.getTime())+".jpg");
-			}
-			else {
-				ImageIO.write(screenShot, "JPG", new File("./pruebas/"+formatter.format(now.getTime())+".jpg"));
-				_log("./pruebas/"+formatter.format(now.getTime())+".jpg");
-			}
-	}
-	
-	public void takeScreenshot() throws Exception, FileNotFoundException{
-		takeScreenshot("./pruebas/screenshot");
-	}
-	
+    public static void captureScreenshot(WebDriver browser, String screenshotName, String format){
+        try {
+            TakesScreenshot ts=(TakesScreenshot)browser;
+            File source=ts.getScreenshotAs(OutputType.FILE);
+            FileUtils.copyFile(source, new File("./src/test/resources/screenshots/"+screenshotName +format));
+        } catch (Exception e){
+        	_log("Exception while taking screenshot "+e.getMessage());
+        }
+    }
+    
+	public static void captureScreenshot(String filename) throws Exception, FileNotFoundException{
+		Robot robot = new Robot();
+		BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+		ImageIO.write(screenShot, "JPG", new File("./src/test/resources/screenshots/"+ filename + ".jpg"));
+		_log("./src/test/resources/screenshots/"+filename+".jpg");
+		}
+	 
+	public static void captureScreenshot() throws Exception, FileNotFoundException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd hh mm ss a");
+		Calendar now = Calendar.getInstance();
+		Robot robot = new Robot();
+		BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+		ImageIO.write(screenShot, "JPG", new File("./src/test/resources/screenshots/"+ formatter.format(now.getTime()) + ".jpg"));
+		_log("./src/test/resources/screenshots/"+ formatter.format(now.getTime()) + ".jpg");
+		}
 }
