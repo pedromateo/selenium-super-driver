@@ -34,14 +34,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.By.ByClassName;
-import org.openqa.selenium.By.ByCssSelector;
-import org.openqa.selenium.By.ById;
-import org.openqa.selenium.By.ByLinkText;
-import org.openqa.selenium.By.ByName;
-import org.openqa.selenium.By.ByPartialLinkText;
-import org.openqa.selenium.By.ByTagName;
-import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
@@ -54,12 +46,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.w3c.css.sac.Selector;
-
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
@@ -888,7 +877,7 @@ public class SuperDriver {
 				}
 		}
 		else {
-			_log("File: "+ filename+" is already Downloaded and avaiable on the directory "+directory);
+			_log("File: " + filename + " is already Downloaded and avaiable on the directory "+directory);
 		}
 	}
 	/**
@@ -1022,7 +1011,6 @@ public class SuperDriver {
 	///
 	/// Delete file or directory
 	///
-	
 	/**
 	 * Force deletion of directory or file.
 	 * @param path
