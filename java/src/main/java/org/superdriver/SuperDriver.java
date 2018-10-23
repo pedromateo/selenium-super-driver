@@ -58,6 +58,7 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.w3c.css.sac.Selector;
 
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.itextpdf.text.pdf.PdfReader;
@@ -66,7 +67,7 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 /**
  * 
  * @author Adrián Nicolás Conesa, Pedro Luís Mateo Navarro, ...
- * l
+ * 
  */
 @SuppressWarnings("incomplete-switch")
 public class SuperDriver {
@@ -89,7 +90,6 @@ public class SuperDriver {
 	///
 	/// internal SuperDriver configuration
 	///
-
 	/// log system
 	protected static boolean log_enabled = false;
 	private final static String LOG_TAG = "[SD] ";
@@ -113,7 +113,6 @@ public class SuperDriver {
 	///
 	/// URL methods
 	///
-	
 	/**
 	 * Load a URL in the browser by .get function.
 	 * @param String url
@@ -134,43 +133,19 @@ public class SuperDriver {
 	///
 	/// Wait
 	///
-	
 	/**
 	 * Makes a wait until the WebElement have presence on the WebPage.
 	 * @param mode
 	 * @param key
 	 * @throws NoSuchElementException
 	 */
-	public void waitElementPresenceBy(How mode, String key) throws NoSuchElementException{
+	public void waitElementPresence(By selector) throws NoSuchElementException{
 		try {
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
-			switch(mode) {
-			case XPATH:
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)));
-				break;
-			case ID:
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.id(key)));
-				break;
-			case TAG_NAME:
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName(key)));
-				break;
-			case NAME:
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.name(key)));
-				break;
-			case CSS:
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(key)));
-				break;
-			case LINK_TEXT:
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText(key)));
-				break;
-			case PARTIAL_LINK_TEXT:
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText(key)));
-				break;
-			case CLASS_NAME:
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.className(key)));
+				wait.until(ExpectedConditions.presenceOfElementLocated(selector));
 			}
-		} catch(Exception e) {e.printStackTrace();
-		throw new NotFoundException("Element "+key+" is not found" );
+		catch(Exception e) {e.printStackTrace();
+		throw new NotFoundException("Element "+ selector.toString()  +" is not found" );
 		}
 	}
 	
@@ -228,6 +203,17 @@ public class SuperDriver {
 	            fail("Wait for the element "+element+" is not working");
 	        }
 	    }
+	  
+	  public void waitElementToBeClickable(By selector) {
+	        try {
+	            WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+	            wait.until(ExpectedConditions.elementToBeClickable(selector));
+	        } catch (NoSuchElementException e) {
+	            fail("Element "+selector.toString()+" is not present");
+	        } catch (Exception e) {
+	            fail("Wait for the element "+selector.toString()+" is not working");
+	        }
+	    }
 	
 	///
 	/// Wait and get
@@ -235,11 +221,11 @@ public class SuperDriver {
 	
 	/**
 	 * Get the title of the WebPage
-	 * @return
+	 * @returnString title of the WebPage
 	 */
 	public String getTitle() {
 		String title;
-		waitElementPresenceBy(How.TAG_NAME, "title");
+		waitElementPresence(By.tagName("title"));
 		title = _driver.getTitle();
 		return title;
 	}
@@ -287,273 +273,43 @@ public class SuperDriver {
 	/**
 	 * Get a WebElement
 	 * @param how
-	 * @return WebElement
+	 * @returnWebElement
 	 * @throws NotFoundException
 	 */
-	public WebElement getElement(By how) throws NotFoundException {
+	public WebElement getElement(By selector) throws NotFoundException {
 		try {
-			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
-			wait.until(ExpectedConditions.presenceOfElementLocated(how)); 
-			WebElement elem = null;
-			elem = _driver.findElement(how);
-			if (elem == null)
-				throw new NotFoundException(how.toString());
-			else
-				return elem;
-		} catch (Exception e) {e.printStackTrace();
-		throw new NotFoundException("Element not found " + how.toString());
-		}
-	}
-	
-
-	
-	/**
-	 * Get a WebElement
-	 * @param How mode
-	 * @param String key
-	 * @return WebElement
-	 * @throws NotFoundException
-	 */
-	/*public WebElement get(How mode, String key)  throws NotFoundException {
-		try {
-			switch(mode) {
-			case XPATH:
-				return getByXpath(key);
-			case ID:
-				return getByID(key);
-			case TAG_NAME:
-				return getByTagName(key);
-			case NAME:
-				return getByName(key);
-			case CSS:
-				return getByCssSelector(key);
-			case LINK_TEXT:
-				return getByLinkText(key);
-			case PARTIAL_LINK_TEXT:
-				return getByPartialLinkText(key);
-			case CLASS_NAME:
-				return getByClass(key);
-			default:
-				throw new NotFoundException("Mode not found");
-			}
-		} catch (Exception e) {e.printStackTrace();
-		throw new NotFoundException("Element " + key + " not found");
-		}
-	}*/
-	
-	/**
-	 * Get a WebElement by Xpath locator.
-	 * @param key
-	 * @return WebElement
-	 */
-	/*public WebElement getByXpath(String key) {
-		ByXPath objetoBusqueda = new ByXPath(key);
-		return get(objetoBusqueda);
-	}*/
-	
-	/**
-	 * Get a WebElement by Id locator.
-	 * @param key
-	 * @return WebElement
-	 */
-	/*public WebElement getByID(String key) {
-		ById objetoBusqueda = new ById(key);
-		return get(objetoBusqueda);
-	}*/
-	
-	/**
-	 * Get a WebElement by Name locator.
-	 * @param key
-	 * @return WebElement
-	 */
-	/*public WebElement getByName(String key) {
-		ByName objetoBusqueda = new ByName(key);
-		return get(objetoBusqueda);
-	}*/
-	
-	/**
-	 * Get a WebElement by CssSelector locator.
-	 * @param key
-	 * @return WebElement
-	 */
-	/*public WebElement getByCssSelector(String key) {
-		ByCssSelector objetoBusqueda = new ByCssSelector(key);
-		return get(objetoBusqueda);
-	}*/
-	
-	/**
-	 * Get a WebElement by LinkText locator.
-	 * @param key
-	 * @return WebElement
-	 */
-	/*public WebElement getByLinkText(String key) {
-		ByLinkText objetoBusqueda = new ByLinkText(key);
-		return get(objetoBusqueda);
-	}*/
-	
-	/**
-	 * Get a WebElement by PartialLinkText locator.
-	 * @param key
-	 * @return WebElement
-	 */
-	/*public WebElement getByPartialLinkText(String key) {
-		ByPartialLinkText objetoBusqueda = new ByPartialLinkText(key);
-		return get(objetoBusqueda);
-	}*/
-	
-	/**
-	 * Get a WebElement by TagName locator.
-	 * @param key
-	 * @return WebElement
-	 */
-	/*public WebElement getByTagName(String key) {
-		ByTagName objetoBusqueda = new ByTagName(key);
-		return get(objetoBusqueda);
-	}*/
-	
-	/**
-	 * Get a WebElement by Class locator.
-	 * @param key
-	 * @return WebElement
-	 */
-	/*public WebElement getByClass(String key) {
-		ByClassName objetoBusqueda = new ByClassName(key);
-		return get(objetoBusqueda);
-	}*/
-	
-	/**
-	 * Using the driver methods, searches for an List<WebElements>.
-	 * @param selector
-	 * @return
-	 * @throws NotFoundException
-	 */
-	private List<WebElement> getListOfElements(By selector) throws NotFoundException {
-		try { 
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
-			List <WebElement> lista = null;
-			lista = _driver.findElements(selector);
-			if (lista == null)
+			WebElement elem = null;
+			elem = _driver.findElement(selector);
+			if (elem == null)
 				throw new NotFoundException(selector.toString());
-			else 
-				return lista;
+			else
+				return elem;
 		} catch (Exception e) {e.printStackTrace();
 		throw new NotFoundException("Element not found " + selector.toString());
 		}
 	}
 	
 	/**
-	 * Searches for an List<WebElements>.
-	 * @param mode
-	 * @param key
-	 * @return
+	 * Get a WebElement list
+	 * @param selector
+	 * @returnList<WebElement>
 	 * @throws NotFoundException
 	 */
-	public List<WebElement> getListOfElements(How mode, String key) throws NotFoundException {
+	public List<WebElement> getListOfElements(By selector) throws NotFoundException {
 		try {
-			switch(mode) {
-			case XPATH:
-				return getListOfElementsByXpath(key);
-			case ID:
-				return getListOfElementsByID(key);
-			case TAG_NAME:
-				return getListOfElementsByTagName(key);
-			case NAME:
-				return getListOfElementsByName(key);
-			case CSS:
-				return getListOfElementsByCssSelector(key);
-			case LINK_TEXT:
-				return getListOfElementsByLinkText(key);
-			case PARTIAL_LINK_TEXT:
-				return getListOfElementsByPartialLinkText(key);
-			case CLASS_NAME:
-				return getListOfElementsByClass(key);
-			default:
-				throw new NotFoundException();
-			}
+			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
+			List<WebElement> listelem = null;
+			listelem = _driver.findElements(selector);
+			if (listelem == null)
+				throw new NotFoundException(selector.toString());
+			else
+				return listelem;
 		} catch (Exception e) {e.printStackTrace();
-		throw new NotFoundException();
+		throw new NotFoundException("Element not found " + selector.toString());
 		}
-	}
-	
-	/**
-	 * Search a List<WebElements> using a Xpath locator.
-	 * @param key
-	 * @return
-	 */
-	public List<WebElement> getListOfElementsByXpath(String key) {
-		ByXPath objetoBusqueda = new ByXPath(key);
-		return getListOfElements(objetoBusqueda);
-	}
-	
-	/**
-	 * Search a List<WebElements> using a ID locator.
-	 * @param key
-	 * @return
-	 */
-	public List<WebElement> getListOfElementsByID(String key) {
-		ById objetoBusqueda = new ById(key);
-		return getListOfElements(objetoBusqueda);
-	}
-	
-	/**
-	 * Search a List<WebElements> using a Name locator.
-	 * @param key
-	 * @return
-	 */
-	public List<WebElement> getListOfElementsByName(String key) {
-		ByName objetoBusqueda = new ByName(key);
-		return getListOfElements(objetoBusqueda);
-	}
-	
-	/**
-	 * Search a List<WebElements> using a CssSelector locator.
-	 * @param key
-	 * @return
-	 */
-	public List<WebElement> getListOfElementsByCssSelector(String key) {
-		ByCssSelector objetoBusqueda = new ByCssSelector(key);
-		return getListOfElements(objetoBusqueda);
-	}
-	
-	/**
-	 * Search a List<WebElements> using a LinkText locator.
-	 * @param key
-	 * @return
-	 */
-	public List<WebElement> getListOfElementsByLinkText(String key) {
-		ByLinkText objetoBusqueda = new ByLinkText(key);
-		return getListOfElements(objetoBusqueda);
-	}
-	
-	/**
-	 * Search a List<WebElements> using a PartialLinkText locator.
-	 * @param key
-	 * @return
-	 */
-	public List<WebElement> getListOfElementsByPartialLinkText(String key) {
-		ByPartialLinkText objetoBusqueda = new ByPartialLinkText(key);
-		return getListOfElements(objetoBusqueda);
-	}
-	
-	/**
-	 * Search a List<WebElements> using a TagName locator. 
-	 * @param key
-	 * @return
-	 */
-	public List<WebElement> getListOfElementsByTagName(String key) {
-		ByTagName objetoBusqueda = new ByTagName(key);
-		return getListOfElements(objetoBusqueda);
-	}
-	
-	/**
-	 * Search a List<WebElements> using a ClassName locator.
-	 * @param key
-	 * @return
-	 */
-	public List<WebElement> getListOfElementsByClass(String key) {
-		ByClassName objetoBusqueda = new ByClassName(key);
-		return getListOfElements(objetoBusqueda);
 	}
 	
 
@@ -662,7 +418,11 @@ public class SuperDriver {
 		sel.selectByValue(option);
 	}
 	
-	/// Check if a element is selected
+	/**
+	 * Check if a element is selected and return the value of this element
+	 * @param element
+	 * @return
+	 */
     public String selectGetFirstSelectedOption(WebElement element) {
         String strFirstSelectedOption = null;
         try {
@@ -676,10 +436,10 @@ public class SuperDriver {
         return strFirstSelectedOption;
     }
 
+    
 	///
 	///deSelect option
 	///
-	
 	/// Deselect By index
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
@@ -777,10 +537,25 @@ public class SuperDriver {
 	///
 	/// wait and send keys
 	///
-	
+	/**
+	 * Clear a the input text from a textbox or textinput element
+	 * @param element
+	 */
     public void textboxClear(WebElement element) {
         try {
             waitElementToBeClickable(element);
+            element.clear();
+        } catch (java.util.NoSuchElementException e) {
+            fail("Textbox element is not present");
+        } catch (Exception e) {
+            fail("Textbox text can not be cleared");
+        }
+    }
+    
+    public void textboxClear(By selector) {
+        try {
+            waitElementToBeClickable(selector);
+            WebElement element = getElement(selector);
             element.clear();
         } catch (java.util.NoSuchElementException e) {
             fail("Textbox element is not present");

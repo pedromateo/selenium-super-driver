@@ -20,6 +20,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
@@ -31,6 +32,7 @@ import org.superdriver.SuperFilter;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+
 @SuppressWarnings("unused")
 public class TestsExample {
 
@@ -39,7 +41,7 @@ public class TestsExample {
 	private static SuperDriver _sd;
 	private static SuperChecker _sc;
 	private static SuperFilter _sf;
-	private static String downloadDir = "C:\\Users\\aconesa\\Downloads\\pruebas-descargas";
+	private static String downloadDir = "C:\\Users\\aconesa\\Desktop\\pmproyect\\proyect\\java\\pruebas\\downloads";
 
 
 
@@ -165,11 +167,11 @@ public class TestsExample {
 	public void AutomationRPA() throws IOException, InterruptedException, InvalidFormatException {
 
 		_sd.loadURL("http://www.rpachallenge.com/");
-		if (_sd.isFileDownloaded("challenge.xlsx", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas")==false) {
+		if (_sd.isFileDownloaded("challenge.xlsx", ".\\pruebas\\downloads")==false) {
 			_sd.click(By.xpath("/html/body/div/div/div[1]/div/section[2]/div/a[1]"));
-			_sd.waitForFileDownloaded("challenge.xlsx", "C:\\Users\\aconesa\\Downloads\\pruebas-descargas", 120);	
+			_sd.waitForFileDownloaded("challenge.xlsx", ".\\pruebas\\downloads", 12);	
 		}
-		String[][] data = _sd.fromXLStoArray("C:\\Users\\aconesa\\Downloads\\pruebas-descargas\\challenge.xlsx", 0);
+		String[][] data = _sd.fromXLStoArray(".\\pruebas\\downloads\\challenge.xlsx", 0);
 		_sd.click(By.xpath("/html/body/div/div/div[1]/div/section[3]/div/button"));		        
 
 		for (int count=1; count<11;count++) {
@@ -204,6 +206,7 @@ public class TestsExample {
 			}
 			_sd.getElement(By.className("js-randomFormContainer")).findElement(By.className("btn-default")).click();
 		}
+		_sd.DeleteFileOrFolder(".\\pruebas\\downloads\\challenge.xlsx");
 	}
 	
 	
