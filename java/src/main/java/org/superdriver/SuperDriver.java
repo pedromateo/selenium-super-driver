@@ -58,7 +58,6 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
  * @author Adrián Nicolás Conesa, Pedro Luís Mateo Navarro, ...
  * 
  */
-@SuppressWarnings("incomplete-switch")
 public class SuperDriver {
 	
 	private RemoteWebDriver _driver;
@@ -81,7 +80,7 @@ public class SuperDriver {
 	///
 	/// log system
 	protected static boolean log_enabled = false;
-	private final static String LOG_TAG = "[SD] ";
+	private final static String LOG_TAG = "[SD]: ";
 	
 	public SuperDriver enableLog() {
 		log_enabled = true;
@@ -261,7 +260,7 @@ public class SuperDriver {
 	
 	/**
 	 * Get a WebElement
-	 * @param how
+	 * @param By
 	 * @returnWebElement
 	 * @throws NotFoundException
 	 */
@@ -554,7 +553,7 @@ public class SuperDriver {
     }
 	/**
 	 * Write in a Text box.
-	 * @param How mode
+	 * @param By selector
 	 * @param String key
 	 * @param String sendKey
 	 */
@@ -703,6 +702,7 @@ public class SuperDriver {
         js.executeScript("arguments[0].scrollIntoView();", element);
     	}
     	catch (ElementNotFoundException e) {
+    		_log("Element not found");
     	}
     }
     
@@ -961,7 +961,6 @@ public class SuperDriver {
 		//Initialize the array length
 		int row_count = 0;
 		int colum_count_max = 0;
-
 		for (Row row: sheet) {
 			int colum_count_of_the_row = 0;
 			for(@SuppressWarnings("unused") Cell cell: row) {
@@ -1057,15 +1056,34 @@ public class SuperDriver {
 	///
 	/// Screenshot method
 	///
-    public static void captureScreenshot(WebDriver browser, String screenshotName, String format){
+    public void captureScreenshot(WebDriver browser, String path, String screenshotName, String format){
         try {
+        	browser = _driver;
             TakesScreenshot ts=(TakesScreenshot)browser;
             File source=ts.getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(source, new File("./src/test/resources/screenshots/"+screenshotName +format));
+            FileUtils.copyFile(source, new File(path + screenshotName + format));
         } catch (Exception e){
         	_log("Exception while taking screenshot "+e.getMessage());
         }
     }
+    
+	public static void captureScreenshot(String path, String filename){
+		Robot robot;
+		try {
+			robot = new Robot();
+			BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+			ImageIO.write(screenShot, "JPG", new File(path + filename + ".jpg"));
+			_log(path + filename + ".jpg - Has been created");
+		} 
+		catch (AWTException e) {
+			e.printStackTrace();
+			_log("Error Taking the screenshot");
+		} 
+		catch (IOException e) {
+			_log("Error creating the file - " + path + filename + ".jpg");
+			e.printStackTrace();
+		}
+	}
     
 	public static void captureScreenshot(String filename) throws Exception, FileNotFoundException{
 		Robot robot = new Robot();

@@ -105,6 +105,7 @@ public class SuperFilter {
 	
 	/**
 	 * Condition to filter by TagName a List<WebElement>.
+	 * 
 	 * 				List<WebElement>
 						.stream()
 						.filter(a -> a.getTagName().contains(value))
@@ -124,6 +125,7 @@ public class SuperFilter {
 	
 	/**
 	 * Condition to filter by TagName a List<WebElement>.
+	 * 
 	 * 				List<WebElement>
 						.stream()
 						.filter(a -> a.getTagName().contains(value))

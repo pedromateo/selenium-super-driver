@@ -80,13 +80,14 @@ public class TestsExample {
 	//********************************
 	//			Test area
 	//********************************
-
-	/*
+	
 	@Test
 		public void excelprueba() throws InvalidFormatException, IOException {
-		_sd.fromXLStoArray("./sample-xlsx-file.xlsx", 0);
+		_sd.enableLog();
+		_sd.fromXLStoArray("C:\\Users\\aconesa\\Desktop\\pmproyect\\proyect\\java\\pruebas\\downloads\\challenge.xlsx", 0);
+		_sd.captureScreenshot("C:\\Users\\aconesa\\Desktop\\pmproyect\\proyect\\java\\pruebas\\screenshot", "filename");
 	}
-	*/
+
 
 	/*
 	@Test
@@ -162,10 +163,10 @@ public class TestsExample {
 	}
 	*/
 	
-	
+	/*
 	@Test
 	public void AutomationRPA() throws IOException, InterruptedException, InvalidFormatException {
-
+		_sd.enableLog();
 		_sd.loadURL("http://www.rpachallenge.com/");
 		if (_sd.isFileDownloaded("challenge.xlsx", ".\\pruebas\\downloads")==false) {
 			_sd.click(By.xpath("/html/body/div/div/div[1]/div/section[2]/div/a[1]"));
@@ -179,8 +180,8 @@ public class TestsExample {
 
 			List<WebElement> cajas = _sd.getElement(By.className("js-randomFormContainer")).findElements(By.tagName("input")).stream()
 					.collect(Collectors.toList());
-
 			for (String titulo:cuadros) {
+				
 				int pos = cuadros.indexOf(titulo);
 				if (titulo.contains("First Name")){
 					cajas.get(pos).sendKeys(data[count][0]);
@@ -208,7 +209,7 @@ public class TestsExample {
 		}
 		_sd.DeleteFileOrFolder(".\\pruebas\\downloads\\challenge.xlsx");
 	}
-	
+	*/
 	
 	/*
 	@Test
@@ -234,10 +235,10 @@ public class TestsExample {
 	}
 	*/
 	
-	@AfterClass
+	/*@AfterClass
 	public static void testOut(){
 		_driver.quit();
-	}
+	}*/
 }
 
 
