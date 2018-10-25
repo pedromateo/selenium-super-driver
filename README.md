@@ -12,9 +12,9 @@
   
 ## Include SuperDriver in your project
  	 
- - opción de maven + código que hay que meter en el pom	 - opción de maven + código que hay que meter en el pom
+ - opción de maven + código que hay que meter en el pom
  	 
- - u opción de descargarse el proyecto	 - u opción de descargarse el proyecto
+ - u opción de descargarse el proyecto
  	 
  	 
 ## Usage example of SuperDriver and SuperChecker
@@ -50,12 +50,12 @@ To work with SuperDriver once you have it included in your proyect you only need
  With SuperDriver.
  	 
   	 public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
-    		_sd.loadURL("http://automationpractice.com/index.php");
+    		    _sd.loadURL("http://automationpractice.com/index.php");
  		    _sd.click(How.CLASS_NAME, "login");
  		    _sd.sendKeys(How.ID, "email", "prueba001@email.com");
  		    _sd.sendKeys(How.ID, "passwd", "password");
  		    _sd.click(How.ID, "SubmitLogin");
- 		 }
+		    }
    	   
  		 	
    Without SuperDriver.
@@ -69,6 +69,6 @@ To work with SuperDriver once you have it included in your proyect you only need
  		    _driver.findElement(By.id("email")).sendKeys("prueba001@email.com");	 		
  		    wait.until(ExpectedConditions.presenceOfElementLocated(By.id("passwd")));	 		
 		    _driver.findElement(By.id("passwd")).sendKeys("password");
-	    	wait.until(ExpectedConditions.presenceOfElementLocated(By.id("SubmitLogin")));
-	    	_driver.findElement(By.id("SubmitLogin")).click();
-  }
+	    	    wait.until(ExpectedConditions.presenceOfElementLocated(By.id("SubmitLogin")));
+	    	    _driver.findElement(By.id("SubmitLogin")).click();
+		    }
