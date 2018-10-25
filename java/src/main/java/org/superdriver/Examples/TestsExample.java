@@ -80,14 +80,14 @@ public class TestsExample {
 	//********************************
 	//			Test area
 	//********************************
-	
+	/*
 	@Test
 		public void excelprueba() throws InvalidFormatException, IOException {
 		_sd.enableLog();
 		_sd.fromXLStoArray("C:\\Users\\aconesa\\Desktop\\pmproyect\\proyect\\java\\pruebas\\downloads\\challenge.xlsx", 0);
 		_sd.captureScreenshot("C:\\Users\\aconesa\\Desktop\\pmproyect\\proyect\\java\\pruebas\\screenshot", "filename");
 	}
-
+	 */
 
 	/*
 	@Test

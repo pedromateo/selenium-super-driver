@@ -1,7 +1,20 @@
 package org.superdriver;
 
+import java.awt.AWTException;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import javax.imageio.ImageIO;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.internal.ArrayComparisonFailure;
@@ -52,24 +65,24 @@ public class SuperChecker {
 		}
 	}
 	
-	
-	
 	/**
 	 * Gets a screenshot.
-	 * @param driver
+	 * @param path
 	 * @return void
+	 * @throws AWTException 
 	 */
-	public static void captureScreenShot(WebDriver ldriver){
-		// Take screenshot and store as a file format             
-		File src=((TakesScreenshot)ldriver).getScreenshotAs(OutputType.FILE);
+	private static void captureScreenshot(String path) throws AWTException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd hh mm ss a");
+		Calendar now = Calendar.getInstance();
+		Robot robot = new Robot();
+		BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
 		try {
-			// now copy the  screenshot to desired location using copyFile method
-			FileUtils.copyFile(src, new File("/superdriver/AssertScreenshots" + System.currentTimeMillis() + ".png"));                             
-		} 
-		catch (IOException e){
-			System.out.println(e.getMessage()); 
+			ImageIO.write(screenShot, "JPG", new File(path + formatter.format(now.getTime()) + ".jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-	}
+		System.out.println(path + formatter.format(now.getTime()) + ".jpg");
+		}
 	
 	/**
 	 * Asserts that a condition is true. If it isn't it throws an
@@ -81,10 +94,11 @@ public class SuperChecker {
 	 */
 	public void assertTrue(String message, boolean condition) {
 		try {
+			_takeScreenshot();
 			org.junit.Assert.assertTrue(message, condition);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -102,7 +116,7 @@ public class SuperChecker {
 			org.junit.Assert.assertTrue(condition);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -122,7 +136,7 @@ public class SuperChecker {
 			org.junit.Assert.assertFalse(message, condition);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -140,7 +154,7 @@ public class SuperChecker {
 			org.junit.Assert.assertFalse(condition);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -159,7 +173,7 @@ public class SuperChecker {
 			org.junit.Assert.fail(message);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -174,7 +188,7 @@ public class SuperChecker {
 			org.junit.Assert.fail();
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -196,7 +210,7 @@ public class SuperChecker {
 			org.junit.Assert.assertEquals(message, expected, actual);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -217,7 +231,7 @@ public class SuperChecker {
 			org.junit.Assert.assertEquals(expected, actual);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -231,7 +245,7 @@ public class SuperChecker {
 		} catch (AssertionError err) {
 			try{
 
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -252,7 +266,7 @@ public class SuperChecker {
 		} catch (AssertionError err) {
 			try{
 
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -265,7 +279,7 @@ public class SuperChecker {
 		} catch (AssertionError err) {
 			try{
 
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -278,7 +292,7 @@ public class SuperChecker {
 		} catch (AssertionError err) {
 			try{
 
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -290,7 +304,7 @@ public class SuperChecker {
 			org.junit.Assert.assertNull(message, object);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -302,7 +316,7 @@ public class SuperChecker {
 			org.junit.Assert.assertNull(object);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -314,7 +328,7 @@ public class SuperChecker {
 			org.junit.Assert.assertSame(message, expected, actual);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -326,7 +340,7 @@ public class SuperChecker {
 			org.junit.Assert.assertSame(expected, actual);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -338,7 +352,7 @@ public class SuperChecker {
 			org.junit.Assert.assertNotSame(message, unexpected, actual);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
@@ -350,12 +364,43 @@ public class SuperChecker {
 			org.junit.Assert.assertNotSame(unexpected, actual);
 		} catch (AssertionError err) {
 			try{
-				SuperDriver.captureScreenshot();
+				_takeScreenshot();
 			} finally {
 				throw err;
 			}
 		}
 	}
 	
+	protected static boolean screenshot_enabled = false;
+	private static String SCREENSHOT_PATH = "";
+	private final static String SCREENSHOT_TAG = "[Screenshot]: ";
+	
+	public SuperChecker enableScreenshot(String path) {
+		screenshot_enabled = true;
+		SCREENSHOT_PATH = path;
+		return this;
+	}
+	
+	public SuperChecker disableScreenshot() {
+		screenshot_enabled = false;
+		SCREENSHOT_PATH = "";
+		return this;
+	}
+	
+	private static void _takeScreenshot() {
+		if (screenshot_enabled)
+			try {
+				if (Files.isDirectory(Paths.get(SCREENSHOT_PATH))) {
+				captureScreenshot(SCREENSHOT_PATH);
+				}
+				else {
+					new File(SCREENSHOT_PATH).mkdirs();
+					captureScreenshot(SCREENSHOT_PATH);
+				}
+			} catch (AWTException e) {
+				System.out.println("Error taking the Screenshot");
+				e.printStackTrace();
+			}
+	}
 	
 }

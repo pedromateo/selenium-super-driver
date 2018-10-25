@@ -1,7 +1,6 @@
 package org.superdriver;
 
 import static org.junit.Assert.fail;
-
 import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.management.AttributeNotFoundException;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -59,10 +57,10 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
  * 
  */
 public class SuperDriver {
-	
+
 	private RemoteWebDriver _driver;
 	private static final int WAIT_TIMEOUT = 60;
-	
+
 	/**
 	 * Builder that receives the driver as an argument and creates a SuperDriver type object.
 	 * @param driver
@@ -73,30 +71,30 @@ public class SuperDriver {
 	public RemoteWebDriver getDriver() {
 		return _driver;
 	}
-	
-	
+
+
 	///
 	/// internal SuperDriver configuration
 	///
 	/// log system
 	protected static boolean log_enabled = false;
 	private final static String LOG_TAG = "[SD]: ";
-	
+
 	public SuperDriver enableLog() {
 		log_enabled = true;
 		return this;
 	}
-	
+
 	public SuperDriver disableLog() {
 		log_enabled = false;
 		return this;
 	}
-	
+
 	protected static <a> void _log(a msg) {
 		if (log_enabled)
 			System.out.println(LOG_TAG + msg);
 	}
-	
+
 
 	///
 	/// URL methods
@@ -108,7 +106,7 @@ public class SuperDriver {
 	public void loadURL(String url) {
 		_driver.get(url);	
 	}
-	
+
 	/**
 	 * Load a URL in the browser by .navigate().to() function.
 	 * @param url
@@ -117,7 +115,7 @@ public class SuperDriver {
 		_driver.navigate().to(url);
 	}
 
-	
+
 	///
 	/// Wait
 	///
@@ -127,23 +125,23 @@ public class SuperDriver {
 	 * @param key
 	 * @throws NoSuchElementException
 	 */
-	public void waitElementPresence(By selector) throws NoSuchElementException{
+	public void waitElementPresence(By selector){
 		try {
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
-				wait.until(ExpectedConditions.presenceOfElementLocated(selector));
-			}
+			wait.until(ExpectedConditions.presenceOfElementLocated(selector));
+		}
 		catch(Exception e) {e.printStackTrace();
 		throw new NotFoundException("Element "+ selector.toString()  +" is not found" );
 		}
 	}
-	
+
 	/**
 	 * Makes a wait until the WebElement is visible on the WebPage.
 	 * @param mode
 	 * @param key
 	 * @throws ElementNotVisibleException
 	 */
-	public void waitElementVisibilityBy(By selector) throws ElementNotVisibleException{
+	public void waitElementVisibilityBy(By selector){
 		try {
 			WebElement elemento;
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
@@ -153,7 +151,7 @@ public class SuperDriver {
 		throw new  ElementNotVisibleException("Element "+ selector.toString() +" is not visible" );
 		}
 	}
-	
+
 	/**
 	 * Makes a wait until the WebElement is visible on the WebPage.
 	 * @param Webelement
@@ -167,7 +165,7 @@ public class SuperDriver {
 		throw new ElementNotVisibleException("Element is not visible" );
 		}
 	}
-	
+
 	/**
 	 * Makes a wait a determined time.
 	 * @param Int Time in ms
@@ -181,32 +179,39 @@ public class SuperDriver {
 		}
 	}
 	
-	  public void waitElementToBeClickable(WebElement element) {
-	        try {
-	            WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
-	            wait.until(ExpectedConditions.elementToBeClickable(element));
-	        } catch (NoSuchElementException e) {
-	            fail("Element "+element+" is not present");
-	        } catch (Exception e) {
-	            fail("Wait for the element "+element+" is not working");
-	        }
-	    }
-	  
-	  public void waitElementToBeClickable(By selector) {
-	        try {
-	            WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
-	            wait.until(ExpectedConditions.elementToBeClickable(selector));
-	        } catch (NoSuchElementException e) {
-	            fail("Element "+selector.toString()+" is not present");
-	        } catch (Exception e) {
-	            fail("Wait for the element "+selector.toString()+" is not working");
-	        }
-	    }
+	/**
+	 * Wait for a element to be clickable.
+	 * @param element
+	 */
+	public void waitElementToBeClickable(WebElement element) {
+		try {
+			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.elementToBeClickable(element));
+		} catch (NoSuchElementException e) {
+			fail("Element "+element+" is not present");
+		} catch (Exception e) {
+			fail("Wait for the element "+element+" is not working");
+		}
+	}
 	
+	/**
+	 * Wait for a element to be clickable.
+	 * @param selector
+	 */
+	public void waitElementToBeClickable(By selector) {
+		try {
+			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.elementToBeClickable(selector));
+		} catch (NoSuchElementException e) {
+			fail("Element "+selector.toString()+" is not present");
+		} catch (Exception e) {
+			fail("Wait for the element "+selector.toString()+" is not working");
+		}
+	}
+
 	///
 	/// Wait and get
 	///
-	
 	/**
 	 * Get the title of the WebPage
 	 * @returnString title of the WebPage
@@ -217,7 +222,7 @@ public class SuperDriver {
 		title = _driver.getTitle();
 		return title;
 	}
-	
+
 	/**
 	 * Get an attribute from a WebElement
 	 * @param WebElement
@@ -234,7 +239,7 @@ public class SuperDriver {
 			throw new AttributeNotFoundException();
 		}
 	}
-	
+
 	/**
 	 * Get an attribute from a WebElement
 	 * @param String mode
@@ -257,7 +262,7 @@ public class SuperDriver {
 		throw new AttributeNotFoundException();
 		}
 	}
-	
+
 	/**
 	 * Get a WebElement
 	 * @param By
@@ -278,7 +283,7 @@ public class SuperDriver {
 		throw new NotFoundException("Element not found " + selector.toString());
 		}
 	}
-	
+
 	/**
 	 * Get a WebElement list
 	 * @param selector
@@ -299,7 +304,7 @@ public class SuperDriver {
 		throw new NotFoundException("Element not found " + selector.toString());
 		}
 	}
-	
+
 
 	///
 	/// Wait and Click
@@ -317,7 +322,7 @@ public class SuperDriver {
 		}
 		else {throw new NoSuchElementException("WebElement not found.");}
 	}
-	
+
 	/**
 	 * Simulates a click on a WebElement.
 	 * @param mode
@@ -332,8 +337,8 @@ public class SuperDriver {
 		}
 		else {throw new NoSuchElementException("WebElement not found.");}
 	}
-	
-	
+
+
 	///
 	/// Wait and Select option
 	///
@@ -348,7 +353,7 @@ public class SuperDriver {
 		WebElement elemento = getElement(selector);
 		selectOptionByIndex(elemento, option);
 	}
-	
+
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
 	 * @param elemento
@@ -359,7 +364,7 @@ public class SuperDriver {
 		Select sel = new Select(elemento);
 		sel.selectByIndex(option);
 	}
-	
+
 	///By VisibleText
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
@@ -371,7 +376,7 @@ public class SuperDriver {
 		WebElement elemento = getElement(selector);
 		selectOptionByVisibleText(elemento, option);
 	}
-	
+
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
 	 * @param elemento
@@ -382,7 +387,7 @@ public class SuperDriver {
 		Select sel = new Select(elemento);
 		sel.selectByVisibleText(option);
 	}
-	
+
 	///By Value
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
@@ -394,7 +399,7 @@ public class SuperDriver {
 		WebElement elemento = getElement(selector);
 		selectOptionByValue(elemento, option);
 	}
-	
+
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
 	 * @param Elemento
@@ -405,26 +410,26 @@ public class SuperDriver {
 		Select sel = new Select(element);
 		sel.selectByValue(option);
 	}
-	
+
 	/**
 	 * Check if a element is selected and return the value of this element
 	 * @param element
 	 * @return
 	 */
-    public String selectGetFirstSelectedOption(WebElement element) {
-        String strFirstSelectedOption = null;
-        try {
-            Select sel = new Select(element);
-            strFirstSelectedOption = sel.getFirstSelectedOption().getText();
-        } catch (NoSuchElementException e) {
-            fail("Select element is not present");
-        } catch (Exception e) {
-            fail("Could not find any selected option");
-        }
-        return strFirstSelectedOption;
-    }
+	public String selectGetFirstSelectedOption(WebElement element) {
+		String strFirstSelectedOption = null;
+		try {
+			Select sel = new Select(element);
+			strFirstSelectedOption = sel.getFirstSelectedOption().getText();
+		} catch (NoSuchElementException e) {
+			fail("Select element is not present");
+		} catch (Exception e) {
+			fail("Could not find any selected option");
+		}
+		return strFirstSelectedOption;
+	}
 
-    
+
 	///
 	///deSelect option
 	///
@@ -439,7 +444,7 @@ public class SuperDriver {
 		WebElement elemento = getElement(selector);
 		deSelectOptionByIndex(elemento, option);
 	}
-	
+
 	/**
 	 * Select a option from a dropbox, radio button or checkbox.
 	 * @param elemento
@@ -450,8 +455,8 @@ public class SuperDriver {
 		Select sel = new Select(elemento);
 		sel.deselectByIndex(option);
 	}
-	
-	
+
+
 	///Deselect By VisibleText
 	/**
 	 * Deselect a option from a dropbox, radio button or checkbox.
@@ -463,7 +468,7 @@ public class SuperDriver {
 		WebElement elemento = getElement(selector);
 		deSelectOptionByVisibleText(elemento, option);
 	}
-	
+
 	/**
 	 * Deselect a option from a dropbox, radio button or checkbox.
 	 * @param elemento
@@ -475,8 +480,8 @@ public class SuperDriver {
 		sel = new Select(elemento);
 		sel.deselectByVisibleText(option);
 	}
-	
-	
+
+
 	///Deselect By Value
 	/**
 	 * Deselect a option from a dropbox, radio button or checkbox.
@@ -488,7 +493,7 @@ public class SuperDriver {
 		WebElement elemento = getElement(selector);
 		deSelectOptionByValue(elemento, option);
 	}
-	
+
 	/**
 	 * Deselect a option from a dropbox, radio button or checkbox.
 	 * @param elemento
@@ -499,7 +504,7 @@ public class SuperDriver {
 		Select sel = new Select(elemento);
 		sel.deselectByValue(option);
 	}
-	
+
 	///deselect all
 	/**
 	 * Deselect all the options from a multiple choose box, radio button or checkbox.
@@ -510,7 +515,7 @@ public class SuperDriver {
 		WebElement elemento = getElement(selector);
 		deSelectAllOptions(elemento);
 	}
-	
+
 	/**
 	 * Deselect all the options from a multiple choose box, radio button or checkbox.
 	 * @param elemento
@@ -521,7 +526,7 @@ public class SuperDriver {
 		sel.deselectAll();
 	}
 
-	
+
 	///
 	/// wait and send keys
 	///
@@ -529,28 +534,28 @@ public class SuperDriver {
 	 * Clear a the input text from a textbox or textinput element
 	 * @param element
 	 */
-    public void textboxClear(WebElement element) {
-        try {
-            waitElementToBeClickable(element);
-            element.clear();
-        } catch (java.util.NoSuchElementException e) {
-            fail("Textbox element is not present");
-        } catch (Exception e) {
-            fail("Textbox text can not be cleared");
-        }
-    }
-    
-    public void textboxClear(By selector) {
-        try {
-            waitElementToBeClickable(selector);
-            WebElement element = getElement(selector);
-            element.clear();
-        } catch (java.util.NoSuchElementException e) {
-            fail("Textbox element is not present");
-        } catch (Exception e) {
-            fail("Textbox text can not be cleared");
-        }
-    }
+	public void textboxClear(WebElement element) {
+		try {
+			waitElementToBeClickable(element);
+			element.clear();
+		} catch (java.util.NoSuchElementException e) {
+			fail("Textbox element is not present");
+		} catch (Exception e) {
+			fail("Textbox text can not be cleared");
+		}
+	}
+
+	public void textboxClear(By selector) {
+		try {
+			waitElementToBeClickable(selector);
+			WebElement element = getElement(selector);
+			element.clear();
+		} catch (java.util.NoSuchElementException e) {
+			fail("Textbox element is not present");
+		} catch (Exception e) {
+			fail("Textbox text can not be cleared");
+		}
+	}
 	/**
 	 * Write in a Text box.
 	 * @param By selector
@@ -561,7 +566,7 @@ public class SuperDriver {
 		WebElement elemento = getElement(selector);
 		sendKeys(elemento, sendKey);
 	}
-	
+
 	/**
 	 * Write in a Text box.
 	 * @param elemento
@@ -575,11 +580,11 @@ public class SuperDriver {
 		}
 	}
 
-	
+
 	///
 	/// Browser and Window Methods
 	///
-	
+
 	// Change between tabs
 	/**
 	 * Switch to the selected window. 0 = main window of the browser 
@@ -590,7 +595,7 @@ public class SuperDriver {
 		ArrayList tabs = new ArrayList (_driver.getWindowHandles());
 		_driver.switchTo().window(tabs.get(number).toString());
 	}
-	
+
 	/**
 	 * Open a new tab in the browser
 	 * @throws AWTException
@@ -602,7 +607,7 @@ public class SuperDriver {
 		robot.keyRelease(KeyEvent.VK_CONTROL);
 		robot.keyRelease(KeyEvent.VK_T);
 	}
-	
+
 	/**
 	 * Switch between the tabs in the browser
 	 * @throws AWTException
@@ -616,14 +621,14 @@ public class SuperDriver {
 		robot.keyRelease(KeyEvent.VK_SHIFT);
 		robot.keyRelease(KeyEvent.VK_TAB);
 	}
-	
+
 	/**
 	 * Maximize window
 	 */
 	public void maximize() {
 		_driver.manage().window().maximize();
 	}
-	
+
 	/**
 	 * Switch to last window and maximize it
 	 * @throws InterruptedException
@@ -636,7 +641,7 @@ public class SuperDriver {
 		}
 		this.maximize();
 	}
-	
+
 	/**
 	 * Switch to main window and maximize it
 	 * @throws InterruptedException
@@ -646,7 +651,7 @@ public class SuperDriver {
 		wait.wait(WAIT_TIMEOUT);
 		_driver.switchTo().window(_driver.getWindowHandles().iterator().next());
 	}
-	
+
 	/**
 	 * Load a cookie inserting cookie name and token
 	 * @param name
@@ -656,7 +661,7 @@ public class SuperDriver {
 		Cookie cookie = new Cookie(name, token);
 		_driver.manage().addCookie(cookie);
 	}
-	
+
 	/// Delete cookies
 	/**
 	 * Delete all the cookies of the browser.
@@ -664,8 +669,8 @@ public class SuperDriver {
 	public void deletecookies() {
 		_driver.manage().deleteAllCookies();
 	}
-	
-	
+
+
 	///
 	/// Mouse Movement Methods
 	///
@@ -688,125 +693,127 @@ public class SuperDriver {
 		_target = getElement(selectortarget);
 		dragAndDrop.perform();
 	}
-	
+
 	public void moveViewToElement(By selector) {
 		WebElement _where;
 		Actions builder = new Actions(_driver);
 		_where = getElement(selector);
 		builder.moveToElement(_where).perform();
 	}
+
+	public void scrollToElement(WebElement element) {
+		try {
+			JavascriptExecutor js = (JavascriptExecutor) _driver;       			
+			js.executeScript("arguments[0].scrollIntoView();", element);
+		}
+		catch (ElementNotFoundException e) {
+			_log("Element not found");
+		}
+	}
+
+	public void scrollDownByPixel(int pixelnum) {
+		JavascriptExecutor js = (JavascriptExecutor) _driver;	
+		js.executeScript("window.scrollBy(0,"+pixelnum+")");
+	}
+
+	public void scrollUpByPixel(int pixelnum) {
+		pixelnum = pixelnum - (pixelnum*2);
+		JavascriptExecutor js = (JavascriptExecutor) _driver;	
+		js.executeScript("window.scrollBy(0,"+pixelnum+")");
+	}
+
+	public static String dateGetCurrentDate() {
+		String strCurrentTime = null;
+		try {
+			Date date = new Date();
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm:ss");
+			strCurrentTime = dateFormat.format(date);
+
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		return strCurrentTime;
+	}
 	
-    public void scrollToElement(WebElement element) {
-    	try {
-        JavascriptExecutor js = (JavascriptExecutor) _driver;       			
-        js.executeScript("arguments[0].scrollIntoView();", element);
-    	}
-    	catch (ElementNotFoundException e) {
-    		_log("Element not found");
-    	}
-    }
-    
-    public void scrollDownByPixel(int pixelnum) {
-    	JavascriptExecutor js = (JavascriptExecutor) _driver;	
-    	js.executeScript("window.scrollBy(0,"+pixelnum+")");
-    }
-    
-    public void scrollUpByPixel(int pixelnum) {
-    	pixelnum = pixelnum - (pixelnum*2);
-    	JavascriptExecutor js = (JavascriptExecutor) _driver;	
-    	js.executeScript("window.scrollBy(0,"+pixelnum+")");
-    }
-    
-    public static String dateGetCurrentDate() {
-        String strCurrentTime = null;
-        try {
-            Date date = new Date();
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm:ss");
-            strCurrentTime = dateFormat.format(date);
-
-        } catch (Exception e) {
-            e.getMessage();
-        }
-        return strCurrentTime;
-    }
+	
 	///
-    ///Alerts
-    ///
-    public String alertGetText() {
-        String strValue = null;
-        try {
-            waitAlertIsPresent();
-            Alert alt = _driver.switchTo().alert();
-            strValue = alt.getText();
-        } catch (NoAlertPresentException e) {
-            fail("Alert is not present");
-        } catch (Exception e) {
-            fail("Alert pop-up text could not be retrieved");
-        }
-        return strValue;
-    }
+	///Alerts
+	///
+	public String alertGetText() {
+		String strValue = null;
+		try {
+			waitAlertIsPresent();
+			Alert alt = _driver.switchTo().alert();
+			strValue = alt.getText();
+		} catch (NoAlertPresentException e) {
+			fail("Alert is not present");
+		} catch (Exception e) {
+			fail("Alert pop-up text could not be retrieved");
+		}
+		return strValue;
+	}
 
-    public void alertDismiss() {
-        try {
-            waitAlertIsPresent();
-            Alert alt = _driver.switchTo().alert();
-            alt.dismiss();
-        } catch (NoAlertPresentException e) {
-            fail("Alert is not present");
-        } catch (Exception e) {
-            fail("Alert can not be dismissed");
-        }
-    }
-    
-    public void alertAccept() {
-        try {
-            waitAlertIsPresent();
-            Alert alt = _driver.switchTo().alert();
-            alt.accept();
-        } catch (NoAlertPresentException e) {
-            fail("Alert is not present");
-        } catch (Exception e) {
-            fail("Alert can not be accepted");
-        }
-    }
+	public void alertDismiss() {
+		try {
+			waitAlertIsPresent();
+			Alert alt = _driver.switchTo().alert();
+			alt.dismiss();
+		} catch (NoAlertPresentException e) {
+			fail("Alert is not present");
+		} catch (Exception e) {
+			fail("Alert can not be dismissed");
+		}
+	}
 
-    public boolean isAlertPresent() {
-    	waitAlertIsPresent();
-        boolean blnValue = false;
-        try{
-            _driver.switchTo().alert();
-            blnValue =  true;
-        }catch (NoAlertPresentException e) {
-            blnValue =  false;
-        }
-        return blnValue;
-    }
-    
-    private void waitAlertIsPresent() {
-        try {
-            WebDriverWait wait = new WebDriverWait(_driver, 20);
-            wait.until(ExpectedConditions.alertIsPresent());
-        } catch (Exception e) {
-        	_log("Wait for the element is not working");
-        }
-    }
-    
-    
-    ///
-    ///Highlight
-    ///
-    public void highlightLocator(WebElement locator){
-        try{
-            JavascriptExecutor js = (JavascriptExecutor) _driver;
-            js.executeScript("arguments[0].style.border='3px solid red'",locator);
-        }catch(NoSuchElementException e){
-            fail("The webelement to be highlighted is not present");
-        }catch (Exception e){
-            fail("Highlighting can not be performmed");
-        }
-    }
-    
-    
+	public void alertAccept() {
+		try {
+			waitAlertIsPresent();
+			Alert alt = _driver.switchTo().alert();
+			alt.accept();
+		} catch (NoAlertPresentException e) {
+			fail("Alert is not present");
+		} catch (Exception e) {
+			fail("Alert can not be accepted");
+		}
+	}
+
+	public boolean isAlertPresent() {
+		waitAlertIsPresent();
+		boolean blnValue = false;
+		try{
+			_driver.switchTo().alert();
+			blnValue =  true;
+		}catch (NoAlertPresentException e) {
+			blnValue =  false;
+		}
+		return blnValue;
+	}
+
+	private void waitAlertIsPresent() {
+		try {
+			WebDriverWait wait = new WebDriverWait(_driver, 20);
+			wait.until(ExpectedConditions.alertIsPresent());
+		} catch (Exception e) {
+			_log("Wait for the element is not working");
+		}
+	}
+
+
+	///
+	///Highlight
+	///
+	public void highlightLocator(WebElement locator){
+		try{
+			JavascriptExecutor js = (JavascriptExecutor) _driver;
+			js.executeScript("arguments[0].style.border='3px solid red'",locator);
+		}catch(NoSuchElementException e){
+			fail("The webelement to be highlighted is not present");
+		}catch (Exception e){
+			fail("Highlighting can not be performmed");
+		}
+	}
+
+
 	///
 	/// Wait and hover
 	///
@@ -821,7 +828,7 @@ public class SuperDriver {
 		elemento = getElement(selector);
 		action.moveToElement(elemento).build().perform();
 	}
-	
+
 	/**
 	 * Simulates the Overpass of the mouse over a element.
 	 * @param elemento
@@ -830,25 +837,25 @@ public class SuperDriver {
 		Actions action = new Actions(_driver);
 		action.moveToElement(elemento).build().perform();
 	}
-	
+
 	/**
 	 * Close the browser
 	 */
 	public void closeBrowser() {
 		_driver.close();
 	}
-	
+
 	/**
 	 * Quit the Browser
 	 */
 	public void quitBrowser() {
 		_driver.quit();
 	}
-	
+
 	///
 	/// Download methods
 	///
-	
+
 	/**
 	 * Check if a file is in a folder, Else it will click and wait until the file appears in the path.
 	 * @param filename
@@ -874,12 +881,13 @@ public class SuperDriver {
 			if ((timer == timemaxsec) || (check != true)) {
 				_log("File: "+ filename+" is not Downloaded "+ directory);
 				throw new FileNotFoundException();
-				}
+			}
 		}
 		else {
 			_log("File: " + filename + " is already Downloaded and avaiable on the directory "+directory);
 		}
 	}
+
 	/**
 	 * Check if a file is in a folder, Else it will click and wait until the file appears in the path with a max time of 120 sec.
 	 * @param filename
@@ -890,11 +898,7 @@ public class SuperDriver {
 	public void waitForFileDownloaded(String filename, String directory) throws IOException, InterruptedException { 
 		waitForFileDownloaded(filename, directory, 120);
 	}
-	
-	public void waitForFileDownloaded(String filename) throws IOException, InterruptedException { 
-		waitForFileDownloaded(filename, "./pruebas/downloads", 120);
-	}
-	
+
 	/**
 	 * Check if a file exist in a folder.
 	 * @param fileName
@@ -912,13 +916,12 @@ public class SuperDriver {
 		}
 		return flag;
 	}
-	
-	
-	
+
+
 	///
 	///PDF methods
 	///
-	
+
 	/**
 	 * Check if a String exist in a PDF with Caps/Symbols sensitivity.
 	 * @param word
@@ -927,22 +930,22 @@ public class SuperDriver {
 	 */
 	public boolean existInPDF(String word, String pdfPath) throws IOException {
 		boolean exist = false;
-			PdfReader reader = new PdfReader(pdfPath);
-			for (int i=1; i<=reader.getNumberOfPages(); i=i+1) {
-				String page = PdfTextExtractor.getTextFromPage(reader, i);
-				if (page.contains(word)) {
-					_log("Word -" + word + "- exist in page: " + i);
-					exist = true;   
-				}
+		PdfReader reader = new PdfReader(pdfPath);
+		for (int i=1; i<=reader.getNumberOfPages(); i=i+1) {
+			String page = PdfTextExtractor.getTextFromPage(reader, i);
+			if (page.contains(word)) {
+				_log("Word -" + word + "- exist in page: " + i);
+				exist = true;   
 			}
+		}
 		return exist;
 	}
-	
-	
+
+
 	///
 	///Excel Methods
 	///
-	
+
 	/**
 	 * Takes the data from a sheet of a XLS file, throwing it into an array.
 	 * @param String XLS_File_Path
@@ -1005,8 +1008,8 @@ public class SuperDriver {
 		workbook.close();
 		return data;
 	}
-	
-	
+
+
 	///
 	/// Delete file or directory
 	///
@@ -1026,7 +1029,7 @@ public class SuperDriver {
 			_log("File or Folder not found : "+path);
 		}
 	}
-	
+
 	private void delete(File file) {
 		if(file.isDirectory()) {
 			String fileList[] = file.list();
@@ -1052,52 +1055,63 @@ public class SuperDriver {
 		}
 	}
 
-	
+
 	///
 	/// Screenshot method
 	///
-    public void captureScreenshot(WebDriver browser, String path, String screenshotName, String format){
-        try {
-        	browser = _driver;
-            TakesScreenshot ts=(TakesScreenshot)browser;
-            File source=ts.getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(source, new File(path + screenshotName + format));
-        } catch (Exception e){
-        	_log("Exception while taking screenshot "+e.getMessage());
-        }
-    }
-    
-	public static void captureScreenshot(String path, String filename){
+	public void captureScreenshot(WebDriver browser, String path, String screenshotName, String format){
+		try {
+			TakesScreenshot ts=(TakesScreenshot)browser;
+			File source=ts.getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(source, new File(path + screenshotName + format));
+		} catch (Exception e){
+			_log("Exception while taking screenshot "+e.getMessage());
+		}
+	}
+
+	public void captureScreenshot(String path, String screenshotName, String format){
+		try {
+			TakesScreenshot ts=(TakesScreenshot)_driver;
+			File source=ts.getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(source, new File(path + screenshotName + format));
+		} catch (Exception e){
+			_log("Exception while taking screenshot "+e.getMessage());
+		}
+	}
+
+	public void captureScreenshot(String path, String screenshotName){
 		Robot robot;
 		try {
 			robot = new Robot();
 			BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-			ImageIO.write(screenShot, "JPG", new File(path + filename + ".jpg"));
-			_log(path + filename + ".jpg - Has been created");
+			ImageIO.write(screenShot, "JPG", new File(path + screenshotName + ".jpg"));
+			_log(path + screenshotName + ".jpg - Has been created");
 		} 
 		catch (AWTException e) {
 			e.printStackTrace();
 			_log("Error Taking the screenshot");
 		} 
 		catch (IOException e) {
-			_log("Error creating the file - " + path + filename + ".jpg");
+			_log("Error creating the file - " + path + screenshotName + ".jpg");
 			e.printStackTrace();
 		}
 	}
-    
-	public static void captureScreenshot(String filename) throws Exception, FileNotFoundException{
+
+	public void captureScreenshot(String path) throws Exception, FileNotFoundException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd hh mm ss a");
+		Calendar now = Calendar.getInstance();
 		Robot robot = new Robot();
 		BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-		ImageIO.write(screenShot, "JPG", new File("./src/test/resources/screenshots/"+ filename + ".jpg"));
-		_log("./src/test/resources/screenshots/"+filename+".jpg");
-		}
-	 
+		ImageIO.write(screenShot, "JPG", new File(path + formatter.format(now.getTime()) + ".jpg"));
+		_log(path + formatter.format(now.getTime()) + ".jpg");
+	}
+
 	public static void captureScreenshot() throws Exception, FileNotFoundException{
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd hh mm ss a");
 		Calendar now = Calendar.getInstance();
 		Robot robot = new Robot();
 		BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-		ImageIO.write(screenShot, "JPG", new File("./src/test/resources/screenshots/"+ formatter.format(now.getTime()) + ".jpg"));
-		_log("./src/test/resources/screenshots/"+ formatter.format(now.getTime()) + ".jpg");
-		}
+		ImageIO.write(screenShot, "JPG", new File("./pruebas/screenshot" + formatter.format(now.getTime()) + ".jpg"));
+		_log("./pruebas/screenshot" + formatter.format(now.getTime()) + ".jpg");
+	}
 }

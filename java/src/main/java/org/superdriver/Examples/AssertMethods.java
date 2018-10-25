@@ -7,6 +7,7 @@ import java.awt.Desktop;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,6 +22,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -52,7 +54,7 @@ public class AssertMethods {
 	public static void testIn() {
 		/// Need to configure a custom driver? Do it here...
 
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\aconesa\\Downloads\\chromedriver_win32\\chromedriver_1.exe");		
+		System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");		
 		ChromeOptions options = new ChromeOptions();
 		HashMap<String, Object> chromeOptions = new HashMap<String, Object>();
 		chromeOptions.put("plugins.plugins_disabled", new String[] {"Chrome PDF Viewer"});
@@ -86,9 +88,17 @@ public class AssertMethods {
 
 	/*
 	@Test
-	public void assertTrue() throws InterruptedException, AttributeNotFoundException{
+	public void assertTrue(){
+		_sc.enableScreenshot("./pruebas/screenshot/");
 		_sd.loadURL("https://www.google.es/");
-		_sc.assertTrue(_sc.elementPresent(By.id("lst-ib")));
+		try {
+			_sd.getElement(By.id("lst-ib"));
+			_sc.assertFalse(false);
+		}
+		catch(org.openqa.selenium.WebDriverException e){
+			System.out.println("notfound");
+			_sc.assertEquals("aaa", "aaa");
+	}
 	}
 	*/
 	
