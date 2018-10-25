@@ -50,8 +50,8 @@ To work with SuperDriver once you have it included in your proyect you only need
  With SuperDriver.
  	 
   	 public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
-    		    _sd.loadURL("http://automationpractice.com/index.php");
- 		    _sd.click(How.CLASS_NAME, "login");
+	 	    _sd.loadURL("http://automationpractice.com/index.php");
+		    _sd.click(How.CLASS_NAME, "login");
  		    _sd.sendKeys(How.ID, "email", "prueba001@email.com");
  		    _sd.sendKeys(How.ID, "passwd", "password");
  		    _sd.click(How.ID, "SubmitLogin");
