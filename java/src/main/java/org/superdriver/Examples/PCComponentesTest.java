@@ -20,6 +20,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -81,11 +83,11 @@ public class PCComponentesTest {
 		_sf = new SuperFilter(_sd);
 	}
 
-		//********************************
-		//			Test area
-		//********************************
+	//********************************
+	//			Test area
+	//********************************
 
-	
+
 	@Test
 	public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
 		_sd.loadURL("http://automationpractice.com/index.php");
@@ -94,136 +96,173 @@ public class PCComponentesTest {
 		_sd.sendKeys(By.id("passwd"), "password");
 		_sd.click(By.id("SubmitLogin"));
 	}
-	
+
 	@Test
 	public void LoginTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
+		final int WAIT_TIMEOUT = 6;
+		By selector = null;
+		WebElement elem = null;
+		
+		//_sd.loadURL("http://automationpractice.com/index.php");
 		_driver.get("http://automationpractice.com/index.php");
-		WebDriverWait wait = new WebDriverWait(_driver, 10);
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.className("login")));
-		_driver.findElement(By.className("login")).click();
+		
+		//_sd.click(By.className("login"));
+		try {
+			selector = By.className("login");
+			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
+			elem = _driver.findElement(selector);
+			if (elem != null) {
+				wait.until(ExpectedConditions.elementToBeClickable(elem));
+				elem.click();
+			}
+			else {
+				throw new NoSuchElementException("WebElement not found.");
+			}
+		} catch (org.openqa.selenium.TimeoutException e) {
+			throw new NotFoundException("Element not found " + selector.toString());
+		}
+		
+		//_sd.sendKeys(By.id("email"), "prueba001@email.com");
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("email")));
 		_driver.findElement(By.id("email")).sendKeys("prueba001@email.com");
+		//_sd.sendKeys(By.id("passwd"), "password");
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("passwd")));
 		_driver.findElement(By.id("passwd")).sendKeys("password");
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("SubmitLogin")));
-		_driver.findElement(By.id("SubmitLogin")).click();
+		
+		//_sd.click(By.id("SubmitLogin"));
+		try {
+			selector = By.id("SubmitLogin");
+			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
+			elem = _driver.findElement(selector);
+			if (elem != null) {
+				wait.until(ExpectedConditions.elementToBeClickable(elem));
+				elem.click();
+			}
+			else {
+				throw new NoSuchElementException("WebElement not found.");
+			}
+		} catch (org.openqa.selenium.TimeoutException e) {
+			throw new NotFoundException("Element not found " + selector.toString());
+		}
 	}
-		
-			@Test
-			public void PCComponentesTestWhitSD() throws InterruptedException, AttributeNotFoundException{
-				_sd.maximize();
-				_sd.loadURL("https://www.pccomponentes.com");
-				System.out.println(_sd.getAttribute(By.tagName("a"), "href"));
-				System.out.println("Estamos testeando la pagina:\n" + _sd.getTitle() + "\n");
-				_sd.click(By.tagName("i"));
-				List<String> mainmenu = _sf.mapListOfAttributes(_sf.ByAttribute("id", "GTM").applyFilter(_sd.getElement(By.id("main-menu")).findElements(By.tagName("a"))), "title");
+
+	@Test
+	public void PCComponentesTestWhitSD() throws InterruptedException, AttributeNotFoundException{
+		_sd.maximize();
+		_sd.loadURL("https://www.pccomponentes.com");
+		System.out.println(_sd.getAttribute(By.tagName("a"), "href"));
+		System.out.println("Estamos testeando la pagina:\n" + _sd.getTitle() + "\n");
+		_sd.click(By.tagName("i"));
+		List<String> mainmenu = _sf.mapListOfAttributes(_sf.ByAttribute("id", "GTM").applyFilter(_sd.getElement(By.id("main-menu")).findElements(By.tagName("a"))), "title");
+		_sf.clearFilter();
+		List<String> mainmenu1 = _sf.mapListOfAttributes(_sf.ByAttribute("id", "GTM").applyFilter(_sd.getElement(By.id("main-menu")).findElements(By.tagName("a"))), "href");
+		_sf.clearFilter();
+		Object[] mainmenuarray = mainmenu.toArray();
+		Object[] mainmenuarray1 = mainmenu1.toArray();
+		for(int i=0; i<mainmenu1.size();i++) {
+			if (i == 0) {
+				System.out.println("La pagina tiene las siguientes secciones:");
+			}
+			System.out.println(mainmenuarray[i] +" - "+ mainmenuarray1[i]);
+			_sd.loadURL(mainmenuarray1[i].toString());
+			List<String> subsection = _sf.mapListOfText(_sf.ByAttribute("class", "enlace-secundario").applyFilter( _sd.getElement(By.id("main")).findElements(By.tagName("a"))));
+			_sf.clearFilter();
+			System.out.println(subsection + "\n" + "---------------------------------");
+			List<String> subsection1 = _sf.mapListOfAttributes((_sf.ByAttribute("class", "enlace-secundario", false).applyFilter( _sd.getElement(By.id("main")).findElements(By.tagName("a")))), "href");
+			_sf.clearFilter();
+			for (String urlsub:subsection1) {
+				_sd.loadURL(urlsub);
+				System.out.println("----------" + _driver.findElement(By.tagName("h1")).getText() + "----------");
+				List<String> item = _sf.mapListOfAttributes((_sf.ByAttribute("class", "enlace-superpuesto").applyFilter( _sd.getElement(By.id("articleListContent")).findElements(By.tagName("a")))),"data-name");
 				_sf.clearFilter();
-				List<String> mainmenu1 = _sf.mapListOfAttributes(_sf.ByAttribute("id", "GTM").applyFilter(_sd.getElement(By.id("main-menu")).findElements(By.tagName("a"))), "href");
+				List<String> item1 = _sf.mapListOfAttributes((_sf.ByAttribute("class", "enlace-superpuesto").applyFilter( _sd.getElement(By.id("articleListContent")).findElements(By.tagName("a")))),"href");
 				_sf.clearFilter();
-				Object[] mainmenuarray = mainmenu.toArray();
-				Object[] mainmenuarray1 = mainmenu1.toArray();
-				for(int i=0; i<mainmenu1.size();i++) {
-					if (i == 0) {
-						System.out.println("La pagina tiene las siguientes secciones:");
-					}
-					System.out.println(mainmenuarray[i] +" - "+ mainmenuarray1[i]);
-					_sd.loadURL(mainmenuarray1[i].toString());
-					List<String> subsection = _sf.mapListOfText(_sf.ByAttribute("class", "enlace-secundario").applyFilter( _sd.getElement(By.id("main")).findElements(By.tagName("a"))));
+				Object[] itemarray = item.toArray();
+				int counter=0;
+				for (String itemurl:item1) {
+					_sd.loadURL(itemurl);
+					System.out.println(itemarray[counter]);
+					counter++;
+					List<WebElement> objitem =_sf.ByTagName("img", false).applyFilter(_sd.getElement(By.className("pccom-super-slider-tabs")).findElements(By.className("lazyOwl")));
 					_sf.clearFilter();
-					System.out.println(subsection + "\n" + "---------------------------------");
-					List<String> subsection1 = _sf.mapListOfAttributes((_sf.ByAttribute("class", "enlace-secundario", false).applyFilter( _sd.getElement(By.id("main")).findElements(By.tagName("a")))), "href");
-					_sf.clearFilter();
-					for (String urlsub:subsection1) {
-						_sd.loadURL(urlsub);
-						System.out.println("----------" + _driver.findElement(By.tagName("h1")).getText() + "----------");
-						List<String> item = _sf.mapListOfAttributes((_sf.ByAttribute("class", "enlace-superpuesto").applyFilter( _sd.getElement(By.id("articleListContent")).findElements(By.tagName("a")))),"data-name");
-						_sf.clearFilter();
-						List<String> item1 = _sf.mapListOfAttributes((_sf.ByAttribute("class", "enlace-superpuesto").applyFilter( _sd.getElement(By.id("articleListContent")).findElements(By.tagName("a")))),"href");
-						_sf.clearFilter();
-						Object[] itemarray = item.toArray();
-						int counter=0;
-						for (String itemurl:item1) {
-							_sd.loadURL(itemurl);
-							System.out.println(itemarray[counter]);
-							counter++;
-							List<WebElement> objitem =_sf.ByTagName("img", false).applyFilter(_sd.getElement(By.className("pccom-super-slider-tabs")).findElements(By.className("lazyOwl")));
-							_sf.clearFilter();
-							for (WebElement img : objitem) {
-								_sd.click(img);
-							}
-						}
+					for (WebElement img : objitem) {
+						_sd.click(img);
 					}
 				}
 			}
-	
-			@Test
-			public void PCComponentesTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
-				_driver.navigate().to("https://www.pccomponentes.com");
+		}
+	}
+
+	@Test
+	public void PCComponentesTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
+		_driver.navigate().to("https://www.pccomponentes.com");
+		_driver.manage().timeouts().pageLoadTimeout(10000, TimeUnit.MILLISECONDS);
+		System.out.println("Estamos testeando la pagina:\n" + _driver.getTitle() + "\n");
+		_driver.findElement(By.tagName("i")).click();
+		List<String> mainmenu = _driver.findElement(By.id("main-menu")).findElements(By.tagName("a")).stream()
+				.filter(a -> a.getAttribute("id").contains("GTM"))
+				.map(a -> a.getAttribute("title").toString())
+				.collect(Collectors.toList());
+		List<String> mainmenu1 = _driver.findElement(By.id("main-menu")).findElements(By.tagName("a")).stream()
+				.filter(a -> a.getAttribute("id").contains("GTM"))
+				.map(a -> a.getAttribute("href").toString())
+				.collect(Collectors.toList());
+		Object[] mainmenuarray = mainmenu.toArray();
+		Object[] mainmenuarray1 = mainmenu1.toArray();
+		for(int i=0; i<mainmenu1.size();i++) {
+			if (i == 0) {
+				System.out.println("La pagina tiene las siguientes secciones:");
+			}
+			System.out.println(mainmenuarray[i] +" - "+ mainmenuarray1[i]);
+			_driver.navigate().to(mainmenuarray1[i].toString());
+			_driver.manage().timeouts().pageLoadTimeout(10000, TimeUnit.MILLISECONDS);
+			List<String> subsection = _driver.findElement(By.id("main")).findElements(By.tagName("a"))
+					.stream()
+					.filter(a -> a.getAttribute("class").contains("enlace-secundario"))
+					.map(a -> a.getText())
+					.collect(Collectors.toList());
+			System.out.println(subsection + "\n" + "---------------------------------");
+			List<String> subsection1 = _driver.findElement(By.id("main")).findElements(By.tagName("a"))
+					.stream()
+					.filter(a -> a.getAttribute("class").contains("enlace-secundario"))
+					.map(a -> a.getAttribute("href"))
+					.collect(Collectors.toList());
+			for (String urlsub:subsection1) {
+				_driver.navigate().to(urlsub);
 				_driver.manage().timeouts().pageLoadTimeout(10000, TimeUnit.MILLISECONDS);
-				System.out.println("Estamos testeando la pagina:\n" + _driver.getTitle() + "\n");
-				_driver.findElement(By.tagName("i")).click();
-				List<String> mainmenu = _driver.findElement(By.id("main-menu")).findElements(By.tagName("a")).stream()
-						.filter(a -> a.getAttribute("id").contains("GTM"))
-						.map(a -> a.getAttribute("title").toString())
+				System.out.println("----------" + _driver.findElement(By.tagName("h1")).getText() + "----------");
+				List <String> item = _driver.findElement(By.id("articleListContent")).findElements(By.tagName("a"))
+						.stream()
+						.filter(a -> a.getAttribute("class").contains("enlace-superpuesto"))
+						.map(a -> a.getAttribute("data-name"))
 						.collect(Collectors.toList());
-				List<String> mainmenu1 = _driver.findElement(By.id("main-menu")).findElements(By.tagName("a")).stream()
-						.filter(a -> a.getAttribute("id").contains("GTM"))
-						.map(a -> a.getAttribute("href").toString())
+				List <String> item1 = _driver.findElement(By.id("articleListContent")).findElements(By.tagName("a"))
+						.stream()
+						.filter(a -> a.getAttribute("class").contains("enlace-superpuesto"))
+						.map(a -> a.getAttribute("href"))
 						.collect(Collectors.toList());
-				Object[] mainmenuarray = mainmenu.toArray();
-				Object[] mainmenuarray1 = mainmenu1.toArray();
-				for(int i=0; i<mainmenu1.size();i++) {
-					if (i == 0) {
-						System.out.println("La pagina tiene las siguientes secciones:");
-					}
-					System.out.println(mainmenuarray[i] +" - "+ mainmenuarray1[i]);
-					_driver.navigate().to(mainmenuarray1[i].toString());
+				Object[] itemarray = item.toArray();
+				int counter=0;
+				for (String itemurl:item1) {
+					Thread.sleep(200);
+					_driver.navigate().to(itemurl);
 					_driver.manage().timeouts().pageLoadTimeout(10000, TimeUnit.MILLISECONDS);
-					List<String> subsection = _driver.findElement(By.id("main")).findElements(By.tagName("a"))
-							.stream()
-							.filter(a -> a.getAttribute("class").contains("enlace-secundario"))
-							.map(a -> a.getText())
+					System.out.println(itemarray[counter]);
+					counter++;
+					List<WebElement> objitem = _driver.findElement(By.className("pccom-super-slider-tabs")).findElements(By.className("item")).stream()
+							.map(a-> a.findElement(By.tagName("img")))
 							.collect(Collectors.toList());
-					System.out.println(subsection + "\n" + "---------------------------------");
-					List<String> subsection1 = _driver.findElement(By.id("main")).findElements(By.tagName("a"))
-							.stream()
-							.filter(a -> a.getAttribute("class").contains("enlace-secundario"))
-							.map(a -> a.getAttribute("href"))
-							.collect(Collectors.toList());
-					for (String urlsub:subsection1) {
-						_driver.navigate().to(urlsub);
-						_driver.manage().timeouts().pageLoadTimeout(10000, TimeUnit.MILLISECONDS);
-						System.out.println("----------" + _driver.findElement(By.tagName("h1")).getText() + "----------");
-						List <String> item = _driver.findElement(By.id("articleListContent")).findElements(By.tagName("a"))
-								.stream()
-								.filter(a -> a.getAttribute("class").contains("enlace-superpuesto"))
-								.map(a -> a.getAttribute("data-name"))
-								.collect(Collectors.toList());
-						List <String> item1 = _driver.findElement(By.id("articleListContent")).findElements(By.tagName("a"))
-								.stream()
-								.filter(a -> a.getAttribute("class").contains("enlace-superpuesto"))
-								.map(a -> a.getAttribute("href"))
-								.collect(Collectors.toList());
-						Object[] itemarray = item.toArray();
-						int counter=0;
-						for (String itemurl:item1) {
-							Thread.sleep(200);
-							_driver.navigate().to(itemurl);
-							_driver.manage().timeouts().pageLoadTimeout(10000, TimeUnit.MILLISECONDS);
-							System.out.println(itemarray[counter]);
-							counter++;
-							List<WebElement> objitem = _driver.findElement(By.className("pccom-super-slider-tabs")).findElements(By.className("item")).stream()
-									.map(a-> a.findElement(By.tagName("img")))
-									.collect(Collectors.toList());
-							for (WebElement img : objitem) {
-								img.click();
-								Thread.sleep(200);
-							}
-						}
+					for (WebElement img : objitem) {
+						img.click();
+						Thread.sleep(200);
 					}
 				}
 			}
-	
-		
-		
+		}
+	}
+
+
+
 }
