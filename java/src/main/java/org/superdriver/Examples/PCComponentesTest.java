@@ -124,6 +124,7 @@ public class PCComponentesTest {
 		}
 		
 		//_sd.sendKeys(By.id("email"), "prueba001@email.com");
+		WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("email")));
 		_driver.findElement(By.id("email")).sendKeys("prueba001@email.com");
 		//_sd.sendKeys(By.id("passwd"), "password");
@@ -133,7 +134,6 @@ public class PCComponentesTest {
 		//_sd.click(By.id("SubmitLogin"));
 		try {
 			selector = By.id("SubmitLogin");
-			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
 			elem = _driver.findElement(selector);
 			if (elem != null) {

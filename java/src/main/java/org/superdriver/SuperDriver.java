@@ -92,8 +92,9 @@ public class SuperDriver {
 	}
 
 	protected static <a> void _log(a msg) {
-		if (log_enabled)
+		if (log_enabled) {
 			System.out.println(LOG_TAG + msg);
+		}
 	}
 
 
@@ -131,8 +132,11 @@ public class SuperDriver {
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.presenceOfElementLocated(selector));
 		}
-		catch(Exception e) {e.printStackTrace();
-		throw new NotFoundException("Element "+ selector.toString()  +" is not found" );
+		catch(Exception e){
+			if (log_enabled) {
+				e.printStackTrace();
+			}
+			throw new NotFoundException("Element "+ selector.toString()  +" is not found" );
 		}
 	}
 
@@ -155,7 +159,11 @@ public class SuperDriver {
 		}
 	}
 
-
+	/**
+	 * Check if an element is displayed.
+	 * @param selector
+	 * @return
+	 */
 	public boolean isElementDisplayed(By selector) {
 		WebElement elem;
 		try {
@@ -194,8 +202,11 @@ public class SuperDriver {
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			elemento = getElement(selector);
 			wait.until(ExpectedConditions.visibilityOf(elemento));
-		}catch(Exception e) {e.printStackTrace();
-		throw new  ElementNotVisibleException("Element "+ selector.toString() +" is not visible" );
+		}catch(Exception e) {
+			if (log_enabled) {
+				e.printStackTrace();
+			}
+			throw new ElementNotVisibleException("Element "+ selector.toString() +" is not visible" );
 		}
 	}
 
@@ -208,8 +219,11 @@ public class SuperDriver {
 		try {
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.visibilityOf(elemento));
-		}catch(Exception e) {e.printStackTrace();
-		throw new ElementNotVisibleException("Element is not visible" );
+		}catch(Exception e) {
+			if (log_enabled) {
+				e.printStackTrace();
+			}
+			throw new ElementNotVisibleException("Element is not visible" + elemento);
 		}
 	}
 
@@ -221,7 +235,10 @@ public class SuperDriver {
 	public static void waitTime(int time)throws TimeoutException{
 		try {
 			TimeUnit.MILLISECONDS.sleep(time);
-		}catch (Exception e){e.printStackTrace();
+		}catch (Exception e){
+			if (log_enabled) {
+				e.printStackTrace();
+			}
 		throw new TimeoutException();
 		}
 	}
@@ -280,9 +297,10 @@ public class SuperDriver {
 	public String getAttribute(WebElement elemento, String Att) throws AttributeNotFoundException {
 		try {
 			return elemento.getAttribute(Att);
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (log_enabled) {
+				e.printStackTrace();
+			}
 			throw new AttributeNotFoundException();
 		}
 	}
@@ -305,7 +323,10 @@ public class SuperDriver {
 			}
 			else
 				return att;
-		} catch (Exception e) {e.printStackTrace();
+		} catch (Exception e) {
+			if (log_enabled) {
+				e.printStackTrace();
+			}
 		throw new AttributeNotFoundException();
 		}
 	}
@@ -327,7 +348,9 @@ public class SuperDriver {
 			else
 				return elem;
 		} catch (org.openqa.selenium.TimeoutException e) {
-			e.printStackTrace();
+			if (log_enabled) {
+				e.printStackTrace();
+			}
 			throw new NotFoundException("Element not found " + selector.toString());
 		}
 	}
@@ -348,9 +371,12 @@ public class SuperDriver {
 				throw new NotFoundException(selector.toString());
 			else
 				return listelem;
-		} catch (Exception e) {e.printStackTrace();
-		throw new NotFoundException("Element not found " + selector.toString());
+		} catch (Exception e) {
+			if (log_enabled) {
+				e.printStackTrace();
+			}
 		}
+		throw new NotFoundException("Element not found " + selector.toString());
 	}
 
 
@@ -377,9 +403,8 @@ public class SuperDriver {
 	 * @param key
 	 * @throws NotFoundException
 	 */
-	public void click(By selector)throws NotFoundException {
-		WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT); 
-		WebElement elemento = wait.until(ExpectedConditions.elementToBeClickable(getElement(selector)));
+	public void click(By selector) throws NotFoundException {
+		WebElement elemento = getElement(selector);
 		if (elemento != null) {
 			click(elemento);
 		}
@@ -1136,12 +1161,16 @@ public class SuperDriver {
 			_log(path + screenshotName + ".jpg - Has been created");
 		} 
 		catch (AWTException e) {
-			e.printStackTrace();
-			_log("Error Taking the screenshot");
+			if (log_enabled) {
+				e.printStackTrace();
+				_log("Error Taking the screenshot");
+			}
 		} 
 		catch (IOException e) {
-			_log("Error creating the file - " + path + screenshotName + ".jpg");
-			e.printStackTrace();
+			if (log_enabled) {
+				_log("Error creating the file - " + path + screenshotName + ".jpg");
+				e.printStackTrace();
+			}
 		}
 	}
 
