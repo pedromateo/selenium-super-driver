@@ -1,5 +1,6 @@
 package org.superdriver;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import java.awt.AWTException;
 import java.awt.Rectangle;
@@ -59,7 +60,7 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 public class SuperDriver {
 
 	private RemoteWebDriver _driver;
-	private static final int WAIT_TIMEOUT = 60;
+	private static final int WAIT_TIMEOUT = 6;
 
 	/**
 	 * Builder that receives the driver as an argument and creates a SuperDriver type object.
@@ -136,6 +137,52 @@ public class SuperDriver {
 	}
 
 	/**
+	 * Wait until the a WebElement is not displayed.
+	 * @param element
+	 */
+	public void waitInvisibilityOfElement(By selector) {
+		try {
+			if(isElementDisplayed(selector)){
+				WebElement element = getElement(selector);
+				_log("element" + element + "exists");
+				WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+				wait.until(ExpectedConditions.invisibilityOf(element));
+			}
+		} catch (Exception e) {
+			WebElement element = getElement(selector);
+			highlightLocator(element);
+			fail("The element - " + element + " - still present");
+		}
+	}
+
+
+	public boolean isElementDisplayed(By selector) {
+		WebElement elem;
+		try {
+			elem = getElement(selector);
+			if (elem != null && elem.isDisplayed()) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		catch (Exception e) {
+			return false;
+		}
+		//		}
+		//		catch (org.openqa.selenium.TimeoutException e) {
+		//			return false;
+		//		}
+		//		catch (org.openqa.selenium.NoSuchElementException e) {
+		//			return false;
+		//		}
+		//		catch (org.openqa.selenium.WebDriverException e) {
+		//			return false;
+		//		}
+	}
+
+	/**
 	 * Makes a wait until the WebElement is visible on the WebPage.
 	 * @param mode
 	 * @param key
@@ -178,7 +225,7 @@ public class SuperDriver {
 		throw new TimeoutException();
 		}
 	}
-	
+
 	/**
 	 * Wait for a element to be clickable.
 	 * @param element
@@ -193,7 +240,7 @@ public class SuperDriver {
 			fail("Wait for the element "+element+" is not working");
 		}
 	}
-	
+
 	/**
 	 * Wait for a element to be clickable.
 	 * @param selector
@@ -273,14 +320,15 @@ public class SuperDriver {
 		try {
 			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
-			WebElement elem = null;
-			elem = _driver.findElement(selector);
+
+			WebElement elem = _driver.findElement(selector);
 			if (elem == null)
-				throw new NotFoundException(selector.toString());
+				throw new NotFoundException("Element not found " + selector.toString());
 			else
 				return elem;
-		} catch (Exception e) {e.printStackTrace();
-		throw new NotFoundException("Element not found " + selector.toString());
+		} catch (org.openqa.selenium.TimeoutException e) {
+			e.printStackTrace();
+			throw new NotFoundException("Element not found " + selector.toString());
 		}
 	}
 
@@ -734,8 +782,8 @@ public class SuperDriver {
 		}
 		return strCurrentTime;
 	}
-	
-	
+
+
 	///
 	///Alerts
 	///
@@ -777,7 +825,7 @@ public class SuperDriver {
 		}
 	}
 
-	public boolean isAlertPresent() {
+	public boolean alertIsPresent() {
 		waitAlertIsPresent();
 		boolean blnValue = false;
 		try{
