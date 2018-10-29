@@ -228,17 +228,20 @@ public class TestsExample {
 	}
 	*/
 	
-	/*
+	
 	@Test
 	public void prueba(){
 		_sd.loadURL("https://www.google.com");
 	}
-	*/
+	@Test
+	public void prueba2(){
+		_sd.loadURL("https://www.google.es");
+	}
 	
-	/*@AfterClass
+	@AfterClass
 	public static void testOut(){
 		_driver.quit();
-	}*/
+	}
 }
 
 

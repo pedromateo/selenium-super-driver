@@ -1,6 +1,11 @@
 package org.superdriver.Examples;
 
 import java.util.HashMap;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.awt.AWTException;
 import java.awt.Desktop;
 import java.awt.Robot;
@@ -39,6 +44,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
 
 @SuppressWarnings("unused")
 public class PCComponentesTest {
@@ -86,8 +92,8 @@ public class PCComponentesTest {
 	//********************************
 	//			Test area
 	//********************************
-
-
+	
+	/*
 	@Test
 	public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
 		_sd.loadURL("http://automationpractice.com/index.php");
@@ -95,8 +101,10 @@ public class PCComponentesTest {
 		_sd.sendKeys(By.id("email"), "prueba001@email.com");
 		_sd.sendKeys(By.id("passwd"), "password");
 		_sd.click(By.id("SubmitLogin"));
+		_sc.assertTrue(_sd.isElementDisplayed(By.className("navigation_page")));
 	}
-
+	*/
+	
 	@Test
 	public void LoginTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
 		final int WAIT_TIMEOUT = 6;
@@ -127,6 +135,7 @@ public class PCComponentesTest {
 		WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("email")));
 		_driver.findElement(By.id("email")).sendKeys("prueba001@email.com");
+		
 		//_sd.sendKeys(By.id("passwd"), "password");
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("passwd")));
 		_driver.findElement(By.id("passwd")).sendKeys("password");
@@ -146,8 +155,24 @@ public class PCComponentesTest {
 		} catch (org.openqa.selenium.TimeoutException e) {
 			throw new NotFoundException("Element not found " + selector.toString());
 		}
+	
+		//_sc.assertTrue(_sd.isElementDisplayed(By.className("navigation_page")));
+		boolean check;
+		try {
+			elem = _driver.findElement(By.className("navigation_page"));
+			if (elem != null && elem.isDisplayed()) {
+				check = true;
+			}
+			else {
+				check = false;
+			}
+		}
+		catch (Exception e) {
+			check = false;
+		}
+		org.junit.Assert.assertTrue(check);
 	}
-
+	/*
 	@Test
 	public void PCComponentesTestWhitSD() throws InterruptedException, AttributeNotFoundException{
 		_sd.maximize();
@@ -194,8 +219,8 @@ public class PCComponentesTest {
 			}
 		}
 	}
-
-	@Test
+	*/
+	/*@Test
 	public void PCComponentesTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
 		_driver.navigate().to("https://www.pccomponentes.com");
 		_driver.manage().timeouts().pageLoadTimeout(10000, TimeUnit.MILLISECONDS);
@@ -262,7 +287,12 @@ public class PCComponentesTest {
 			}
 		}
 	}
-
+	*/
+	@AfterClass
+	public static void testOut(){
+		_sd.quitBrowser();
+	}
+	
 
 
 }

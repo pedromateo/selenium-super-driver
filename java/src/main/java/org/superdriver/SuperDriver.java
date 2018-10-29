@@ -1,6 +1,5 @@
 package org.superdriver;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import java.awt.AWTException;
 import java.awt.Rectangle;
