@@ -36,7 +36,7 @@ public class SuperChecker {
 	private SuperDriver _sd;
 	private Assert _checker;
 	private SuperFilter _sf;
-	
+
 	/**
 	 * Constructor
 	 * @param sd
@@ -44,27 +44,40 @@ public class SuperChecker {
 	public SuperChecker(SuperDriver sd) {
 		_sd = sd;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Check the presence of a WebElement.
 	 * @param mode
 	 * @param elem
 	 * @return boolean
 	 */
-	public boolean elementPresent (By selector) {
-		WebElement element = _sd.getElement(selector) ;
-		
+	public void assertElementPresent (By selector) {
 		try {
+			WebElement element = _sd.getElement(selector) ;
 			Assert.assertNotNull(element);
-			return true;
 		}
 		catch (Exception e) {
-			return false;
+			Assert.fail("Exception caught while checking presence of element " + selector.toString());
 		}
 	}
-	
+
+	/**
+	 * Check the presence of a WebElement.
+	 * @param mode
+	 * @param elem
+	 * @return boolean
+	 */
+	public void assertElementDisplayed (By selector) {
+		try {
+			Assert.assertTrue(_sd.isElementDisplayed(selector));
+		}
+		catch (Exception e) {
+			Assert.fail("Exception caught while checking display of element " + selector.toString());
+		}
+	}
+
 	/**
 	 * Gets a screenshot.
 	 * @param path
@@ -82,8 +95,8 @@ public class SuperChecker {
 			e.printStackTrace();
 		}
 		System.out.println(path + formatter.format(now.getTime()) + ".jpg");
-		}
-	
+	}
+
 	/**
 	 * Asserts that a condition is true. If it isn't it throws an
 	 * {@link AssertionError} with the given message.
@@ -122,7 +135,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	/**
 	 * Asserts that a condition is false. If it isn't it throws an
 	 * {@link AssertionError} with the given message.
@@ -142,7 +155,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	/**
 	 * Asserts that a condition is false. If it isn't it throws an
 	 * {@link AssertionError} without a message.
@@ -160,7 +173,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	/**
 	 * Fails a test with the given message.
 	 *
@@ -179,7 +192,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	/**
 	 * Fails a test with no message.
 	 */
@@ -194,7 +207,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	/**
 	 * Asserts that two objects are equal. If they are not, an
 	 * {@link AssertionError} is thrown with the given message. If
@@ -216,7 +229,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	/**
 	 * Asserts that two objects are equal. If they are not, an
 	 * {@link AssertionError} without a message is thrown. If
@@ -237,8 +250,8 @@ public class SuperChecker {
 			}
 		}
 	}
-	
-	
+
+
 	public void assertArrayEquals(String message, Object[] expecteds, Object[] actuals) throws ArrayComparisonFailure {
 		try {
 			org.junit.Assert.assertArrayEquals(message, expecteds, actuals);
@@ -272,7 +285,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	public void assertNotNull(String message, Object object) {
 		try {
 			org.junit.Assert.assertNotNull(message, object);
@@ -285,7 +298,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	public void assertNotNull(Object object) {
 		try {
 			org.junit.Assert.assertNotNull(object);
@@ -298,7 +311,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	protected void assertNull(String message, Object object) {
 		try {
 			org.junit.Assert.assertNull(message, object);
@@ -310,7 +323,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	protected void assertNull(Object object) {
 		try {
 			org.junit.Assert.assertNull(object);
@@ -322,7 +335,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	public void assertSame(String message, Object expected, Object actual) {
 		try {
 			org.junit.Assert.assertSame(message, expected, actual);
@@ -334,7 +347,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	public void assertSame(Object expected, Object actual) {
 		try {
 			org.junit.Assert.assertSame(expected, actual);
@@ -346,7 +359,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	protected void assertNotSame(String message, Object unexpected, Object actual) {
 		try {
 			org.junit.Assert.assertNotSame(message, unexpected, actual);
@@ -358,7 +371,7 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	protected void assertNotSame(Object unexpected, Object actual) {
 		try {
 			org.junit.Assert.assertNotSame(unexpected, actual);
@@ -370,28 +383,28 @@ public class SuperChecker {
 			}
 		}
 	}
-	
+
 	protected static boolean screenshot_enabled = false;
 	private static String SCREENSHOT_PATH = "";
 	private final static String SCREENSHOT_TAG = "[Screenshot]: ";
-	
+
 	public SuperChecker enableScreenshot(String path) {
 		screenshot_enabled = true;
 		SCREENSHOT_PATH = path;
 		return this;
 	}
-	
+
 	public SuperChecker disableScreenshot() {
 		screenshot_enabled = false;
 		SCREENSHOT_PATH = "";
 		return this;
 	}
-	
+
 	private static void _takeScreenshot() {
 		if (screenshot_enabled)
 			try {
 				if (Files.isDirectory(Paths.get(SCREENSHOT_PATH))) {
-				captureScreenshot(SCREENSHOT_PATH);
+					captureScreenshot(SCREENSHOT_PATH);
 				}
 				else {
 					new File(SCREENSHOT_PATH).mkdirs();
@@ -402,5 +415,5 @@ public class SuperChecker {
 				e.printStackTrace();
 			}
 	}
-	
+
 }

@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import javax.management.AttributeNotFoundException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -92,32 +93,22 @@ public class PCComponentesTest {
 	//********************************
 	//			Test area
 	//********************************
-	
-	/*
-	@Test
-	public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
-		_sd.loadURL("http://automationpractice.com/index.php");
-		_sd.click(By.className("login"));
-		_sd.sendKeys(By.id("email"), "prueba001@email.com");
-		_sd.sendKeys(By.id("passwd"), "password");
-		_sd.click(By.id("SubmitLogin"));
-		_sc.assertTrue(_sd.isElementDisplayed(By.className("navigation_page")));
-	}
-	*/
-	
+
+
 	@Test
 	public void LoginTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
 		final int WAIT_TIMEOUT = 6;
 		By selector = null;
 		WebElement elem = null;
-		
+		WebDriverWait wait = null;
+
 		//_sd.loadURL("http://automationpractice.com/index.php");
 		_driver.get("http://automationpractice.com/index.php");
-		
+
 		//_sd.click(By.className("login"));
 		try {
 			selector = By.className("login");
-			WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+			wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
 			elem = _driver.findElement(selector);
 			if (elem != null) {
@@ -127,21 +118,32 @@ public class PCComponentesTest {
 			else {
 				throw new NoSuchElementException("WebElement not found.");
 			}
-		} catch (org.openqa.selenium.TimeoutException e) {
-			throw new NotFoundException("Element not found " + selector.toString());
-		}
-		
-		//_sd.sendKeys(By.id("email"), "prueba001@email.com");
-		WebDriverWait wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("email")));
-		_driver.findElement(By.id("email")).sendKeys("prueba001@email.com");
-		
-		//_sd.sendKeys(By.id("passwd"), "password");
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("passwd")));
-		_driver.findElement(By.id("passwd")).sendKeys("password");
-		
-		//_sd.click(By.id("SubmitLogin"));
-		try {
+
+			//_sd.sendKeys(By.id("email"), "prueba001@email.com");
+			selector = By.id("email");
+			wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
+			elem = _driver.findElement(selector);
+			if (elem != null) {
+				elem.sendKeys("prueba001@email.com");
+			}
+			else {
+				throw new NoSuchElementException("WebElement not found.");
+			}
+
+			//_sd.sendKeys(By.id("passwd"), "password");
+			selector = By.id("passwd");
+			wait = new WebDriverWait(_driver, WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
+			elem = _driver.findElement(selector);
+			if (elem != null) {
+				elem.sendKeys("password");
+			}
+			else {
+				throw new NoSuchElementException("WebElement not found.");
+			}
+
+			//_sd.click(By.id("SubmitLogin"));
 			selector = By.id("SubmitLogin");
 			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
 			elem = _driver.findElement(selector);
@@ -152,26 +154,37 @@ public class PCComponentesTest {
 			else {
 				throw new NoSuchElementException("WebElement not found.");
 			}
+
+			//_sc.assertTrue(_sd.isElementDisplayed(By.className("navigation_page")));
+			selector = By.className("navigation_page");
+			wait.until(ExpectedConditions.presenceOfElementLocated(selector)); 
+			elem = _driver.findElement(selector);
+
+			if (elem != null) {
+				Assert.assertTrue(elem.isDisplayed());
+			}
+			else {
+				Assert.fail("Element not found: " + selector.toString());
+			}
 		} catch (org.openqa.selenium.TimeoutException e) {
 			throw new NotFoundException("Element not found " + selector.toString());
 		}
-	
-		//_sc.assertTrue(_sd.isElementDisplayed(By.className("navigation_page")));
-		boolean check;
-		try {
-			elem = _driver.findElement(By.className("navigation_page"));
-			if (elem != null && elem.isDisplayed()) {
-				check = true;
-			}
-			else {
-				check = false;
-			}
-		}
-		catch (Exception e) {
-			check = false;
-		}
-		org.junit.Assert.assertTrue(check);
+		
+		_driver.close();
 	}
+	
+
+	@Test
+	public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
+		_sd.loadURL("http://automationpractice.com/index.php");
+		_sd.click(By.className("login"));
+		_sd.sendKeys(By.id("email"), "prueba001@email.com");
+		_sd.sendKeys(By.id("passwd"), "password");
+		_sd.click(By.id("SubmitLogin"));
+		_sc.assertElementDisplayed(By.className("navigation_page"));
+		_sd.quitBrowser();
+	}
+	
 	/*
 	@Test
 	public void PCComponentesTestWhitSD() throws InterruptedException, AttributeNotFoundException{
@@ -219,7 +232,7 @@ public class PCComponentesTest {
 			}
 		}
 	}
-	*/
+	 */
 	/*@Test
 	public void PCComponentesTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
 		_driver.navigate().to("https://www.pccomponentes.com");
@@ -287,12 +300,12 @@ public class PCComponentesTest {
 			}
 		}
 	}
-	*/
+	 */
 	@AfterClass
 	public static void testOut(){
 		_sd.quitBrowser();
 	}
-	
+
 
 
 }
