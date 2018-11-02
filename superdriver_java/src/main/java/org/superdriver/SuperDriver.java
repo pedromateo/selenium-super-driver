@@ -105,7 +105,8 @@ public class SuperDriver {
 	 * @param String url
 	 */
 	public void loadURL(String url) {
-		_driver.get(url);	
+		//_driver.get(url);	
+		_driver.navigate().to(url);	
 	}
 
 	/**

@@ -52,7 +52,7 @@ public class GetElementMethods {
 	public static void testIn() {
 		/// Need to configure a custom driver? Do it here...
 
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\aconesa\\Downloads\\chromedriver_win32\\chromedriver_1.exe");		
+		System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");		
 		ChromeOptions options = new ChromeOptions();
 		HashMap<String, Object> chromeOptions = new HashMap<String, Object>();
 		chromeOptions.put("plugins.plugins_disabled", new String[] {"Chrome PDF Viewer"});
@@ -79,38 +79,33 @@ public class GetElementMethods {
 		_sc = new SuperChecker(_sd);
 		_sf = new SuperFilter(_sd);
 	}
-	/*
+
 	@Test
 	public void getelement() throws InvalidFormatException, IOException {
 		_sd.loadURL("https://www.google.com/search?q=gatos&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiM-uK8hd3dAhXNZFAKHYFmClUQ_AUICigB&biw=1920&bih=938");
-		WebElement element = _sd.getElement(By.id("9jmGsTj5jIjF-M:"));
-		_sd.click(element);
-		}
-	*/
-	/*
+		_sd.click(By.id("9jmGsTj5jIjF-M:"));
+	}
+
 	@Test
 	public void getelements() throws InvalidFormatException, IOException {
 		_sd.loadURL("https://www.google.com/search?q=gatos&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiM-uK8hd3dAhXNZFAKHYFmClUQ_AUICigB&biw=1920&bih=938#imgrc=ZEsUl4hxu8VCaM:");
-		List<WebElement> elements = _sd.getListOfElements(How.CLASS_NAME, "dtviD");
+		List<WebElement> elements = _sd.getListOfElements(By.className("dtviD"));
 		for (WebElement element:elements) {
 			System.out.println(element.getText());
 		}
 	}
-	*/
-	
-	/*
+
 	@Test
 	public void getelementBy() throws InvalidFormatException, IOException {
 		_sd.loadURL("https://www.google.com/search?q=gatos&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiM-uK8hd3dAhXNZFAKHYFmClUQ_AUICigB&biw=1920&bih=938");
-		WebElement element = _sd.getElement(By.id("9jmGsTj5jIjF-M:"));
-		_sd.click(element);
-		}
-	*/
-	
+		_sd.click(By.id("9jmGsTj5jIjF-M:"));
+	}
+
+
 	@AfterClass
 	public static void testOut(){
 		_driver.quit();
 	}
-	
-	
+
+
 }

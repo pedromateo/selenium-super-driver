@@ -94,7 +94,16 @@ public class PCComponentesTest {
 	//			Test area
 	//********************************
 
-
+	@Test
+	public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
+		_sd.loadURL("http://automationpractice.com/index.php");
+		_sd.click(By.className("login"));
+		_sd.sendKeys(By.id("email"), "prueba001@email.com");
+		_sd.sendKeys(By.id("passwd"), "password");
+		_sd.click(By.id("SubmitLogin"));
+		_sc.assertElementDisplayed(By.className("navigation_page"));
+	}
+	
 	@Test
 	public void LoginTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
 		final int WAIT_TIMEOUT = 6;
@@ -169,21 +178,8 @@ public class PCComponentesTest {
 		} catch (org.openqa.selenium.TimeoutException e) {
 			throw new NotFoundException("Element not found " + selector.toString());
 		}
-		
-		_driver.close();
 	}
 	
-
-	@Test
-	public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
-		_sd.loadURL("http://automationpractice.com/index.php");
-		_sd.click(By.className("login"));
-		_sd.sendKeys(By.id("email"), "prueba001@email.com");
-		_sd.sendKeys(By.id("passwd"), "password");
-		_sd.click(By.id("SubmitLogin"));
-		_sc.assertElementDisplayed(By.className("navigation_page"));
-		_sd.quitBrowser();
-	}
 	
 	/*
 	@Test
@@ -301,6 +297,7 @@ public class PCComponentesTest {
 		}
 	}
 	 */
+
 	@AfterClass
 	public static void testOut(){
 		_sd.quitBrowser();
