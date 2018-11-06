@@ -6,6 +6,7 @@ Framework to make Selenium easier, lighter, cleaner and more robust.
 
 ### Using SuperDriver and SuperChecker
 
+```java
     public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
         _sd.loadURL("http://automationpractice.com/index.php");
         _sd.click(By.className("login"));
@@ -14,10 +15,11 @@ Framework to make Selenium easier, lighter, cleaner and more robust.
         _sd.click(By.id("SubmitLogin"));
         _sc.assertElementDisplayed(By.className("navigation_page"));
     }
- 	 
+``` 	 
 
 ### Using equivalent Selenium code
 
+```java
     public void LoginTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
         final int WAIT_TIMEOUT = 6;
         By selector = null;
@@ -84,7 +86,8 @@ Framework to make Selenium easier, lighter, cleaner and more robust.
             throw new NotFoundException("Element not found " + selector.toString());
         }
     }
- 	 
+```
+
 ## Introduction
  	 
 SuperDriver improves and simplifies the automatic testing proccess with standard Selenium. Specially aimed at automation beginners, SuperDriver reduces learning time as well as development time, increasing robustness at the same time. SuperDriver includes also SuperChecker in order to ease those checks done during testing.
