@@ -80,16 +80,19 @@ Framework to make Selenium easier, lighter, cleaner and more robust.
     }
 ```
 
-## An now, the introduction...
+## And now, the introduction...
  	 
-SuperDriver improves and simplifies the automatic testing proccess with standard Selenium. Specially aimed at automation beginners, SuperDriver reduces learning time as well as development time, increasing robustness at the same time. SuperDriver includes also SuperChecker in order to ease those checks done during testing.
-  	 	  	 
-SuperDriver makes tests more robust, their code shorter and more understandable, and the automation project more reusable.
-   	   
+SuperDriver improves and simplifies the automatic testing proccess with Selenium. Specially aimed at beginners in automation, it reduces learning time as well as development time, and increases robustness at the same time. Tests code remain shorter and more understandable, thus creating a more reusable automation project. SuperDriver includes also SuperChecker in order to ease those checks to be done during testing.
+
+This sounds great and really primising... maybe a little bold? Let's try it and give us your feedback ;-)   
    	   
  ## How to include SuperDriver in your project
  
- 
+   1) Include the 3 classes compounding SUperDriver.
+   2) Add maven dependencies.
+   3) Enjoy!
+   
+In a near future we'll include this project into Maven repositories.
   	 	  	 
   	 	  	 
 ## Usage example of SuperDriver and SuperChecker
