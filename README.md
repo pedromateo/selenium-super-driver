@@ -6,6 +6,8 @@ Framework to make Selenium easier, lighter, cleaner and more robust.
 
 ### By using SuperDriver and SuperChecker...
 
+7 lines of effective code, clean, robust and human readable.
+
 ```java
     public void LoginTestWhitSD() throws InterruptedException, AttributeNotFoundException{
         _sd.loadURL("http://automationpractice.com/index.php");
@@ -18,6 +20,8 @@ Framework to make Selenium easier, lighter, cleaner and more robust.
 ``` 	 
 
 ### By using equivalent Selenium code...
+
+50 lines of effective code, some repeated statements and expert-readable.
 
 ```java
     public void LoginTestWhitoutSD() throws InterruptedException, AttributeNotFoundException{
