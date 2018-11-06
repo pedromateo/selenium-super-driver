@@ -103,21 +103,21 @@ To work with SuperDriver once you have it included in your proyect you only need
  	 
    2) Declare as global variables the drivers.
 ```java  	 	  	 
-  		private static ChromeDriver _driver;
-  		private static SuperDriver _sd;
-  		private static SuperChecker _sc;
-  		private static SuperFilter _sf;
+    private static ChromeDriver _driver;
+    private static SuperDriver _sd;
+    private static SuperChecker _sc;
+    private static SuperFilter _sf;
 ```
 
    3) Create an object from the original driver.
 ```java  	 	  	 
-  		_driver = new ChromeDriver();
+    _driver = new ChromeDriver();
 ```      	     	      	     
    4) Create objects from the classes SuperDriver, SuperFilter and SuperChecker.
 ```java  	 	  	 
-  		_sd = new SuperDriver(_driver);
-  		_sc = new SuperChecker(_sd);
-  		_sf = new SuperFilter(_sd);
+    _sd = new SuperDriver(_driver);
+    _sc = new SuperChecker(_sd);
+    _sf = new SuperFilter(_sd);
 ```
 
   5) Start working with SuperDriver.
